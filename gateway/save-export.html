@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>存檔轉移</title>
+</head>
+<body>
+<!--
+  Published at https://game.lijiabao.uk/save-export.html (repository lijiabao1998.github.io).
+  The source of truth is gateway/save-export.html in lijiabao-digital-cultural-centre.
+
+  The games moved to https://lijiabao.uk/. Saves stay in the browser and belong to the address
+  they were made on, so the new address cannot read them by itself. It loads this page in a
+  hidden frame, and this page hands over what this browser has stored here: localStorage and
+  IndexedDB. It only answers a page on https://lijiabao.uk, and it changes nothing here.
+-->
+<script>
+(async () => {
+  const TO = 'https://lijiabao.uk';
+  if (parent === window) return;
+
+  const dumpDb = (name) =>
+    new Promise((resolve, reject) => {
+      const open = indexedDB.open(name);
+      open.onerror = () => reject(open.error);
+      open.onblocked = () => reject(new Error('blocked'));
+      open.onsuccess = () => {
+        const db = open.result;
+        const out = { name, version: db.version, stores: [] };
+        const names = [...db.objectStoreNames];
+        if (!names.length) return db.close(), resolve(out);
+        const tx = db.transaction(names, 'readonly');
+        for (const n of names) {
+          const store = tx.objectStore(n);
+          const s = {
+            name: n,
+            keyPath: store.keyPath,
+            autoIncrement: store.autoIncrement,
+            indexes: [...store.indexNames].map((i) => {
+              const ix = store.index(i);
+              return { name: i, keyPath: ix.keyPath, unique: ix.unique, multiEntry: ix.multiEntry };
+            }),
+            records: [],
+          };
+          out.stores.push(s);
+          const keys = store.getAllKeys();
+          const values = store.getAll();
+          values.onsuccess = () => {
+            s.records = keys.result.map((k, i) => [k, values.result[i]]);
+          };
+        }
+        tx.oncomplete = () => (db.close(), resolve(out));
+        tx.onabort = tx.onerror = () => (db.close(), reject(tx.error));
+      };
+    });
+
+  const data = { type: 'lj-saves', v: 1, ls: {}, idb: [] };
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      data.ls[key] = localStorage.getItem(key);
+    }
+  } catch (e) {}
+  try {
+    if (indexedDB.databases) {
+      for (const info of await indexedDB.databases()) {
+        if (info.name) data.idb.push(await dumpDb(info.name));
+      }
+    }
+  } catch (e) {}
+  parent.postMessage(data, TO);
+})();
+</script>
+</body>
+</html>

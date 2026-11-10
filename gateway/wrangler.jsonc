@@ -1,0 +1,21 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  // The games gateway: a separate Worker, so the site itself stays plain static files.
+  // It only answers the addresses listed here; everything else on lijiabao.uk is the site.
+  // One line per game in src/games.js (the play address, plus the alias if the game has one).
+  "name": "lijiabao-games-gateway",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "lijiabao.uk/games/defendtaipei/play*", "zone_name": "lijiabao.uk" },
+    { "pattern": "lijiabao.uk/games/glimmertown/play*", "zone_name": "lijiabao.uk" },
+    { "pattern": "lijiabao.uk/games/shanghaisurvival/play*", "zone_name": "lijiabao.uk" },
+    { "pattern": "lijiabao.uk/lab/fpv/play*", "zone_name": "lijiabao.uk" },
+    { "pattern": "lijiabao.uk/lab/glimmertown-3d/play*", "zone_name": "lijiabao.uk" },
+    { "pattern": "lijiabao.uk/lab/glimmertown-lab/play*", "zone_name": "lijiabao.uk" },
+    { "pattern": "lijiabao.uk/defendtaipei/*", "zone_name": "lijiabao.uk" },
+    { "pattern": "lijiabao.uk/fpv/*", "zone_name": "lijiabao.uk" }
+  ]
+}
