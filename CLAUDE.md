@@ -1,0 +1,31 @@
+# 家寶數位文化中心 — 給 Claude 的工作說明
+
+這個 repo 是 <https://lijiabao.uk/> 的原始碼。沒有管理後台，網站由站主和 Claude 透過 GitHub 維護。操作方式見 `README.md`。
+
+## 定位
+
+- 這是一座文化機構的網站，不是個人履歷或作品集。文字用機構的口吻：簡潔、可信、不誇飾。
+- 站名「家寶數位文化中心」、英文名與一句話簡介都定義在 `src/data/site.ts`。簡介是站主認可的原句，不要改寫。
+- 四個展區固定：影像、遊戲、歷史與文獻、互動實驗。
+
+## 內容規則
+
+- 每件作品一個 Markdown 檔，一定要有摘要與完成狀態；有引用就寫進 `sources`。
+- 作品的說明只寫站主自己的資料裡有的內容（企劃、README、repo 描述）。不要替作品補上評價、意義或沒有根據的細節。
+- 尚未公開的作品不要放上網站。不確定是否已公開，先問站主。
+- 尚未完成的作品不要標成 `complete`。
+
+## 視覺
+
+- 白底、黑色粗字、大量留白、淡紫色區塊；全部直角，沒有陰影。色票與字級在 `src/styles/global.css`。
+- 風格參考 NatCen（natcen.ac.uk）的機構感，但標誌、文案、圖片、版面都是自己的，不要複製對方的內容。
+- 下拉選單：白底、1px 黑框、直角、無陰影、粗體連結。
+- 標誌是粗黑的 L（代表「李」）加一個淡紫色方塊，定義在 `src/components/Mark.astro`、`public/favicon.svg` 與 `scripts/og.mjs`，三處要一致。
+
+## 對 AI 開放
+
+`robots.txt` 全部允許，並提供 `llms.txt`、`llms-full.txt`、每頁的 `.md` 版本、`/api/works.json`、feed 與 sitemap。這些都由 `src/lib/` 產生，新增頁面類型時要一併接上 `src/lib/pages.ts`。
+
+## 改完之後
+
+`npm run build` 必須通過（包含 `scripts/check-dist.mjs`）。推送到 `main` 會自動部署到正式網站。

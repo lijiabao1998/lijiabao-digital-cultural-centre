@@ -1,0 +1,203 @@
+---
+// One page per area: /films/, /games/, /archive/, /lab/
+import Base from '@layouts/Base.astro';
+import WorkCard from '@components/WorkCard.astro';
+import Arrow from '@components/Arrow.astro';
+import { AREAS, SITE, type Area } from '@data/site';
+import { breadcrumbs } from '@lib/schema';
+import { getWorksByArea, workUrl } from '@lib/works';
+
+export function getStaticPaths() {
+  return AREAS.map((area) => ({ params: { area: area.id }, props: { area } }));
+}
+
+interface Props {
+  area: Area;
+}
+const { area } = Astro.props;
+const works = await getWorksByArea(area.id);
+const others = AREAS.filter((a) => a.id !== area.id);
+
+const schema = [
+  breadcrumbs([
+    { name: '首頁', path: '/' },
+    { name: area.name, path: `/${area.id}/` },
+  ]),
+  {
+    '@type': 'CollectionPage',
+    '@id': `${SITE.url}/${area.id}/#page`,
+    name: `${area.name}（${area.nameEn}）`,
+    description: area.intro,
+    url: `${SITE.url}/${area.id}/`,
+    inLanguage: SITE.locale,
+    isPartOf: { '@id': `${SITE.url}/#website` },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: works.length,
+      itemListElement: works.map((w, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: w.data.title,
+        url: workUrl(w),
+      })),
+    },
+  },
+];
+---
+
+<Base title={`${area.name}（${area.nameEn}）`} description={area.intro} markdown={`/${area.id}.md`} schema={schema}>
+  <header class="wrap page-head">
+    <ol class="crumbs" aria-label="目前位置">
+      <li><a href="/">首頁</a></li>
+      <li aria-current="page">{area.name}</li>
+    </ol>
+    <div class="head">
+      <div>
+        <p class="eyebrow head__no">展區 {area.no} — {area.nameEn}</p>
+        <h1>{area.name}</h1>
+        <p class="lead">{area.intro}</p>
+      </div>
+      <p class="head__count">
+        <b>{works.length}</b>
+        <span>{area.unit}作品</span>
+      </p>
+    </div>
+  </header>
+
+  <section class="wrap body">
+    {
+      works.length > 0 ? (
+        <div class="card-grid">
+          {works.map((w, i) => (
+            <WorkCard work={w} showArea={false} level="h2" loading={i < 3 ? 'eager' : 'lazy'} />
+          ))}
+        </div>
+      ) : (
+        <div class="empty">
+          <h2>展品整理中</h2>
+          <p>這個展區的第一批內容正在整理。公開之後，會出現在這裡，也會寫進最新動態。</p>
+          <a class="arrow-link" href="/news/">
+            查看最新動態 <Arrow />
+          </a>
+        </div>
+      )
+    }
+  </section>
+
+  <nav class="wrap others" aria-label="其他展區">
+    <h2 class="eyebrow">其他展區</h2>
+    <ul>
+      {
+        others.map((a) => (
+          <li>
+            <a href={`/${a.id}/`}>
+              <span class="others__no">{a.no}</span>
+              <span class="others__name">{a.name}</span>
+              <Arrow />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</Base>
+
+<style>
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-top: clamp(24px, 3vw, 44px);
+  }
+  .head h1 {
+    font-size: clamp(3.25rem, 9vw, 8rem);
+    line-height: 1.02;
+  }
+  .head__count {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 18px 22px;
+    background: var(--lilac-200);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .head__count b {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1;
+  }
+  .body {
+    padding-top: clamp(36px, 4vw, 56px);
+    padding-bottom: var(--section);
+    border-top: 3px solid var(--ink);
+  }
+  .empty {
+    max-width: 40em;
+    padding: clamp(28px, 4vw, 56px);
+    background: var(--lilac-100);
+  }
+  .empty h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2.125rem);
+  }
+  .empty p {
+    margin-block: 14px 24px;
+  }
+  .others {
+    padding-bottom: var(--section);
+  }
+  .others ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 16px;
+    padding: 3px;
+    background: var(--ink);
+  }
+  .others a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 24px;
+    background: var(--paper);
+    text-decoration: none;
+    transition:
+      background 0.18s ease,
+      color 0.18s ease;
+  }
+  .others a:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .others__no {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+  .others__name {
+    flex: 1;
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    font-weight: 900;
+    line-height: 1.2;
+  }
+  .others :global(svg) {
+    width: 1.8em;
+    height: 0.9em;
+    flex: none;
+  }
+  @media (max-width: 760px) {
+    .head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .head__count {
+      align-items: flex-start;
+    }
+    .others ul {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

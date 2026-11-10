@@ -1,0 +1,352 @@
+---
+// One page per work: picture, summary, sources and completion status.
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '@layouts/Base.astro';
+import Arrow from '@components/Arrow.astro';
+import Cover from '@components/Cover.astro';
+import WorkCard from '@components/WorkCard.astro';
+import { STATUS, areaById } from '@data/site';
+import { breadcrumbs, workNode } from '@lib/schema';
+import { areaOf, formatDate, getWorks, isoDay, slugOf, workMdPath, workPath, type Work } from '@lib/works';
+
+export async function getStaticPaths() {
+  const works = await getWorks();
+  return works.map((work) => ({ params: { area: areaOf(work), slug: slugOf(work) }, props: { work } }));
+}
+
+interface Props {
+  work: Work;
+}
+const { work } = Astro.props;
+const d = work.data;
+const area = areaById(areaOf(work));
+const { Content } = await render(work);
+
+const all = await getWorks();
+const byId = new Map(all.map((w) => [w.id, w]));
+const missing = d.related.filter((id) => !byId.has(id));
+if (missing.length) throw new Error(`[works] ${work.id}: related work not found: ${missing.join(', ')}`);
+const related = d.related.map((id) => byId.get(id)!);
+const sameArea = all.filter((w) => areaOf(w) === area.id && w.id !== work.id && !d.related.includes(w.id));
+const alsoSee = [...related, ...sameArea].slice(0, 3);
+
+const schema = [
+  breadcrumbs([
+    { name: '首頁', path: '/' },
+    { name: area.name, path: `/${area.id}/` },
+    { name: d.title, path: workPath(work) },
+  ]),
+  workNode(work, d.cover),
+];
+---
+
+<Base
+  title={d.title}
+  description={d.summary}
+  image={d.cover?.src}
+  imageAlt={d.coverAlt}
+  markdown={workMdPath(work)}
+  schema={schema}
+  ogType="article"
+>
+  <article>
+    <header class="wrap page-head">
+      <ol class="crumbs" aria-label="目前位置">
+        <li><a href="/">首頁</a></li>
+        <li><a href={`/${area.id}/`}>{area.name}</a></li>
+        <li aria-current="page">{d.title}</li>
+      </ol>
+      <p class="eyebrow kicker">{area.name} · {d.kind}</p>
+      <h1>{d.title}</h1>
+      {d.titleEn && <p class="title-en">{d.titleEn}</p>}
+    </header>
+
+    <div class="wrap cover">
+      {
+        d.cover ? (
+          <Image
+            src={d.cover}
+            alt={d.coverAlt ?? ''}
+            widths={[640, 960, 1400, 1920]}
+            sizes="(min-width: 1480px) 1360px, 92vw"
+            loading="eager"
+          />
+        ) : (
+          <Cover seed={work.id} />
+        )
+      }
+    </div>
+
+    <div class="wrap layout">
+      <div class="main">
+        <p class="lead summary">{d.summary}</p>
+        <div class="prose">
+          <Content />
+        </div>
+
+        {
+          d.sources.length > 0 && (
+            <section class="sources" aria-labelledby="sources-h">
+              <h2 id="sources-h">來源</h2>
+              <ol>
+                {d.sources.map((s) => (
+                  <li>
+                    {s.url ? (
+                      <a href={s.url} rel="noopener">
+                        {s.title}
+                      </a>
+                    ) : (
+                      <span>{s.title}</span>
+                    )}
+                    {s.note && <span class="sources__note">{s.note}</span>}
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )
+        }
+      </div>
+
+      <aside class="facts" aria-label="作品資料">
+        <dl>
+          <div>
+            <dt>完成狀態</dt>
+            <dd>
+              <span class="status" data-status={d.status}>
+                {STATUS[d.status].label}
+              </span>
+              {d.statusNote && <span class="facts__note">{d.statusNote}</span>}
+            </dd>
+          </div>
+          <div>
+            <dt>展區</dt>
+            <dd><a href={`/${area.id}/`}>{area.name}</a></dd>
+          </div>
+          <div>
+            <dt>類型</dt>
+            <dd>{d.kind}</dd>
+          </div>
+          {
+            d.runtime && (
+              <div>
+                <dt>片長</dt>
+                <dd>{d.runtime}</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>日期</dt>
+            <dd><time datetime={isoDay(d.date)}>{formatDate(d.date)}</time></dd>
+          </div>
+          {
+            d.updated && (
+              <div>
+                <dt>最後更新</dt>
+                <dd><time datetime={isoDay(d.updated)}>{formatDate(d.updated)}</time></dd>
+              </div>
+            )
+          }
+          {
+            d.tech.length > 0 && (
+              <div>
+                <dt>技術</dt>
+                <dd>{d.tech.join('、')}</dd>
+              </div>
+            )
+          }
+        </dl>
+
+        <div class="facts__actions">
+          {
+            d.launchUrl && (
+              <a class="btn" href={d.launchUrl} rel="noopener">
+                {area.action} <Arrow />
+              </a>
+            )
+          }
+          {
+            d.repoUrl && (
+              <a class="arrow-link" href={d.repoUrl} rel="noopener">
+                原始碼 <Arrow />
+              </a>
+            )
+          }
+        </div>
+        <p class="facts__md">
+          <a href={workMdPath(work)}>本頁的 Markdown 版本</a>
+        </p>
+      </aside>
+    </div>
+  </article>
+
+  {
+    alsoSee.length > 0 && (
+      <section class="section section--lilac">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>繼續參觀</h2>
+            <a class="arrow-link" href={`/${area.id}/`}>
+              {area.name}展區 <Arrow />
+            </a>
+          </div>
+          <div class="card-grid">
+            {alsoSee.map((w) => (
+              <WorkCard work={w} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .page-head {
+    padding-bottom: clamp(28px, 4vw, 48px);
+  }
+  .kicker {
+    margin-top: clamp(22px, 3vw, 40px);
+  }
+  .page-head h1 {
+    max-width: 16em;
+    font-size: clamp(2.5rem, 6.6vw, 5.75rem);
+  }
+  .title-en {
+    margin-top: 14px;
+    font-size: clamp(0.9375rem, 1.4vw, 1.125rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cover :global(img),
+  .cover :global(svg) {
+    width: 100%;
+    aspect-ratio: 16 / 8;
+    object-fit: cover;
+    background: var(--lilac-100);
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+    align-items: start;
+    gap: clamp(36px, 6vw, 104px);
+    padding-block: clamp(40px, 6vw, 88px) var(--section);
+  }
+  .summary {
+    max-width: 30em;
+    margin-bottom: clamp(28px, 3.4vw, 48px);
+    font-size: clamp(1.25rem, 2vw, 1.5625rem);
+    font-weight: 700;
+    line-height: 1.65;
+  }
+
+  .sources {
+    max-width: 44em;
+    margin-top: clamp(44px, 6vw, 80px);
+    padding-top: 16px;
+    border-top: 3px solid var(--ink);
+  }
+  .sources h2 {
+    font-size: 1.5rem;
+  }
+  .sources ol {
+    margin-top: 12px;
+    counter-reset: src;
+  }
+  .sources li {
+    counter-increment: src;
+    display: grid;
+    grid-template-columns: 2.4em minmax(0, 1fr);
+    padding-block: 14px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9688rem;
+    line-height: 1.7;
+  }
+  .sources li::before {
+    content: counter(src, decimal-leading-zero);
+    grid-row: 1 / 3;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    line-height: 2.1;
+  }
+  .sources li > * {
+    grid-column: 2;
+  }
+  .sources a {
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+  .sources a:hover {
+    background: var(--lilac-200);
+  }
+  .sources__note {
+    color: var(--muted);
+  }
+
+  /* The label beside the work: facts on lilac. */
+  .facts {
+    position: sticky;
+    top: 24px;
+    padding: clamp(22px, 2.4vw, 32px);
+    background: var(--lilac-100);
+  }
+  .facts dl > div {
+    display: grid;
+    grid-template-columns: 6em minmax(0, 1fr);
+    gap: 12px;
+    padding-block: 12px;
+    border-bottom: 1px solid var(--lilac-300);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+  .facts dl > div:first-child {
+    padding-top: 0;
+  }
+  .facts dt {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.85;
+    color: var(--muted);
+  }
+  .facts dd {
+    font-weight: 700;
+  }
+  .facts__note {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.8438rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .facts__actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    margin-top: 24px;
+  }
+  .facts__actions .btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .facts__md {
+    margin-top: 22px;
+    font-size: 0.8125rem;
+    color: var(--muted);
+  }
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+    .facts {
+      position: static;
+      order: -1;
+    }
+    .cover :global(img),
+    .cover :global(svg) {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

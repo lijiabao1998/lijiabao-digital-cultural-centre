@@ -1,0 +1,44 @@
+# Cloudflare Workers static assets headers.
+
+/*
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-Frame-Options: SAMEORIGIN
+  X-Robots-Tag: index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1
+  Link: <https://lijiabao.uk/llms.txt>; rel="describedby"; type="text/plain"
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Machine-readable files: readable from any origin, so agents and tools can fetch them directly.
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/sitemap.xml
+  Access-Control-Allow-Origin: *
+
+/feed.xml
+  Content-Type: application/atom+xml; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/feed.json
+  Content-Type: application/feed+json; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/api/*
+  Content-Type: application/json; charset=utf-8
+  Access-Control-Allow-Origin: *

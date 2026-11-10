@@ -1,0 +1,131 @@
+---
+import Logo from './Logo.astro';
+import { AREAS, SITE } from '@data/site';
+
+const year = new Date().getUTCFullYear();
+const years = year > SITE.founded ? `${SITE.founded}–${year}` : `${SITE.founded}`;
+---
+
+<footer class="site-footer">
+  <div class="wrap top">
+    <div class="brand">
+      <Logo variant="footer" />
+      <p class="brand__line">{SITE.tagline}</p>
+    </div>
+
+    <nav class="cols" aria-label="頁尾導覽">
+      <div>
+        <h2>展區</h2>
+        <ul>
+          {
+            AREAS.map((a) => (
+              <li>
+                <a href={`/${a.id}/`}>{a.name}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h2>中心</h2>
+        <ul>
+          <li><a href="/about/">關於我們</a></li>
+          <li><a href="/news/">最新動態</a></li>
+          <li><a href="/collection/">全部館藏</a></li>
+          <li><a href="/sitemap/">網站地圖</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>給 AI 與程式</h2>
+        <ul>
+          <li><a href="/llms.txt">llms.txt</a></li>
+          <li><a href="/llms-full.txt">llms-full.txt</a></li>
+          <li><a href="/api/works.json">works.json</a></li>
+          <li><a href="/feed.xml">Atom feed</a></li>
+          <li><a href="/sitemap.xml">sitemap.xml</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>其他</h2>
+        <ul>
+          <li><a href={SITE.github} rel="me noopener">GitHub</a></li>
+          <li><a href={SITE.sisterSite.url} rel="noopener">{SITE.sisterSite.name}</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="wrap base">
+    <p>© {years} {SITE.name}</p>
+    <p>本站公開內容歡迎搜尋引擎與 AI 讀取、索引與引用。</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: clamp(56px, 7vw, 96px) 32px;
+  }
+  .site-footer :global(a) {
+    color: inherit;
+  }
+  .top {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
+    gap: clamp(40px, 6vw, 96px);
+  }
+  .brand__line {
+    margin-top: 24px;
+    max-width: 22em;
+    font-size: 0.9688rem;
+    line-height: 1.8;
+    color: var(--lilac-300);
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px 24px;
+  }
+  .cols h2 {
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgb(255 255 255 / 0.28);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--lilac-300);
+  }
+  .cols ul {
+    margin-top: 14px;
+  }
+  .cols a {
+    display: inline-block;
+    padding-block: 5px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-decoration: none;
+  }
+  .cols a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--lilac-400);
+  }
+  .base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 32px;
+    margin-top: clamp(48px, 6vw, 88px);
+    padding-top: 22px;
+    border-top: 1px solid rgb(255 255 255 / 0.28);
+    font-size: 0.8125rem;
+    color: var(--lilac-300);
+  }
+  @media (max-width: 900px) {
+    .top {
+      grid-template-columns: 1fr;
+    }
+    .cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

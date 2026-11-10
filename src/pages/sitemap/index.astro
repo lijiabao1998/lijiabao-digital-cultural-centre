@@ -1,0 +1,170 @@
+---
+// 網站地圖: the human-readable version of sitemap.xml, generated from the same list.
+import Base from '@layouts/Base.astro';
+import { AREAS, SITE } from '@data/site';
+import { getPages } from '@lib/pages';
+import { breadcrumbs } from '@lib/schema';
+import { isoDay } from '@lib/works';
+
+const pages = await getPages();
+const centre = pages.filter((p) => p.group === 'centre');
+const groups = AREAS.map((area) => ({
+  area,
+  index: pages.find((p) => p.path === `/${area.id}/`)!,
+  list: pages.filter((p) => p.group === area.id && p.work),
+}));
+
+const machine = [
+  { href: '/llms.txt', label: 'llms.txt', note: '給 AI 的網站總覽' },
+  { href: '/llms-full.txt', label: 'llms-full.txt', note: '全站文字' },
+  { href: '/api/works.json', label: 'works.json', note: '作品目錄' },
+  { href: '/feed.xml', label: 'feed.xml', note: 'Atom feed' },
+  { href: '/feed.json', label: 'feed.json', note: 'JSON feed' },
+  { href: '/sitemap.xml', label: 'sitemap.xml', note: 'XML sitemap' },
+  { href: '/robots.txt', label: 'robots.txt', note: '爬蟲規則' },
+];
+
+const schema = [
+  breadcrumbs([
+    { name: '首頁', path: '/' },
+    { name: '網站地圖', path: '/sitemap/' },
+  ]),
+];
+---
+
+<Base title="網站地圖" description={`${SITE.name}的所有頁面，共 ${pages.length} 頁。`} schema={schema}>
+  <header class="wrap page-head">
+    <ol class="crumbs" aria-label="目前位置">
+      <li><a href="/">首頁</a></li>
+      <li aria-current="page">網站地圖</li>
+    </ol>
+    <h1>網站地圖</h1>
+    <p class="lead">本站目前共有 {pages.length} 頁。每一頁都列在這裡。</p>
+  </header>
+
+  <div class="wrap map">
+    <section>
+      <h2>中心</h2>
+      <ul>
+        {
+          centre.map((p) => (
+            <li>
+              <a href={p.path}>{p.title}</a>
+              {p.md && (
+                <a class="md" href={p.md}>
+                  .md
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {
+      groups.map(({ area, index, list }) => (
+        <section>
+          <h2>
+            <span class="no">{area.no}</span>
+            <a href={index.path}>{area.name}</a>
+            <a class="md" href={index.md}>
+              .md
+            </a>
+          </h2>
+          {list.length > 0 ? (
+            <ul>
+              {list.map((p) => (
+                <li>
+                  <a href={p.path}>{p.title}</a>
+                  <a class="md" href={p.md}>
+                    .md
+                  </a>
+                  <time datetime={isoDay(p.lastmod)}>{isoDay(p.lastmod)}</time>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="empty">展品整理中</p>
+          )}
+        </section>
+      ))
+    }
+
+    <section>
+      <h2>給 AI 與程式</h2>
+      <ul>
+        {
+          machine.map((m) => (
+            <li>
+              <a href={m.href}>{m.label}</a>
+              <span class="note">{m.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .map {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: clamp(32px, 4vw, 56px) clamp(24px, 4vw, 64px);
+    padding-bottom: var(--section);
+  }
+  .map section {
+    padding-top: 16px;
+    border-top: 3px solid var(--ink);
+  }
+  .map h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 1.5rem;
+  }
+  .map h2 a {
+    text-decoration: none;
+  }
+  .no {
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+  }
+  .map ul {
+    margin-top: 12px;
+  }
+  .map li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-block: 9px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9688rem;
+    line-height: 1.5;
+  }
+  .map li > a:first-child {
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .map a:hover {
+    text-decoration: underline;
+  }
+  .md {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .map time,
+  .note {
+    margin-left: auto;
+    font-size: 0.8125rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .empty {
+    margin-top: 12px;
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+</style>

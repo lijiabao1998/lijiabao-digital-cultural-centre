@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Static assets only: no `main`, no bindings.
+  // Cloudflare Workers Builds runs `npm run build` and then `npx wrangler deploy`.
+  // The custom domain (lijiabao.uk) is attached in the Cloudflare dashboard once the first version is approved.
+  "name": "lijiabao-digital-cultural-centre",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

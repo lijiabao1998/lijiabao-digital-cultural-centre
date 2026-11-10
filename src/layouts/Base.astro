@@ -1,0 +1,92 @@
+---
+import { Font } from 'astro:assets';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import { SITE } from '@data/site';
+import { graph } from '@lib/schema';
+import '../styles/global.css';
+
+interface Props {
+  /** Page title without the site name. Omit on the home page. */
+  title?: string;
+  description?: string;
+  /** Absolute or root-relative URL of the social image. */
+  image?: string;
+  imageAlt?: string;
+  /** Root-relative path of this page's Markdown twin, e.g. /games/defendtaipei.md */
+  markdown?: string;
+  /** Extra schema.org nodes for this page (Organization and WebSite are always included). */
+  schema?: unknown[];
+  ogType?: 'website' | 'article';
+  /** Keep this page out of search indexes (the 404 page). */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE.tagline,
+  image = '/og.png',
+  imageAlt = `${SITE.name}（${SITE.nameEn}）`,
+  markdown,
+  schema = [],
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = title ? `${title}｜${SITE.name}` : `${SITE.name}｜${SITE.nameEn}`;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const imageUrl = new URL(image, SITE.url).href;
+const jsonLd = JSON.stringify(graph(...schema)).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang={SITE.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    <meta
+      name="robots"
+      content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
+    <meta name="author" content={SITE.name} />
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title ?? SITE.name} />
+    <meta property="og:description" content={description} />
+    {!noindex && <meta property="og:url" content={canonical} />}
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Machine-readable versions of this site. See /llms.txt. -->
+    {markdown && <link rel="alternate" type="text/markdown" href={markdown} title="本頁的 Markdown 版本" />}
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+    <link rel="alternate" type="application/atom+xml" href="/feed.xml" title={`${SITE.name} Atom feed`} />
+    <link rel="alternate" type="application/feed+json" href="/feed.json" title={`${SITE.name} JSON feed`} />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <Font cssVariable="--font-latin" preload />
+    <Font cssVariable="--font-tc-a" preload />
+    <Font cssVariable="--font-tc-b" preload />
+
+    <script type="application/ld+json" set:html={jsonLd} />
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到主要內容</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,108 @@
+---
+// 最新動態: every announcement on one page, newest first. Each item has its own anchor.
+import { render } from 'astro:content';
+import Base from '@layouts/Base.astro';
+import Arrow from '@components/Arrow.astro';
+import { SITE } from '@data/site';
+import { breadcrumbs } from '@lib/schema';
+import { formatDate, getNews, isoDay } from '@lib/works';
+
+const news = await getNews();
+const items = await Promise.all(news.map(async (n) => ({ n, Content: (await render(n)).Content })));
+const description = `${SITE.name}的公告與更新紀錄。`;
+
+const schema = [
+  breadcrumbs([
+    { name: '首頁', path: '/' },
+    { name: '最新動態', path: '/news/' },
+  ]),
+  ...news.map((n) => ({
+    '@type': 'NewsArticle',
+    '@id': `${SITE.url}/news/#${n.id}`,
+    headline: n.data.title,
+    description: n.data.summary,
+    datePublished: isoDay(n.data.date),
+    url: `${SITE.url}/news/#${n.id}`,
+    inLanguage: SITE.locale,
+    author: { '@id': `${SITE.url}/#organization` },
+    publisher: { '@id': `${SITE.url}/#organization` },
+  })),
+];
+---
+
+<Base title="最新動態" description={description} markdown="/news.md" schema={schema}>
+  <header class="wrap page-head">
+    <ol class="crumbs" aria-label="目前位置">
+      <li><a href="/">首頁</a></li>
+      <li aria-current="page">最新動態</li>
+    </ol>
+    <h1>最新動態</h1>
+    <p class="lead">公告與更新紀錄。也可以用 <a href="/feed.xml">Atom feed</a> 訂閱。</p>
+  </header>
+
+  <div class="wrap list">
+    {
+      items.map(({ n, Content }) => (
+        <article class="item" id={n.id}>
+          <time datetime={isoDay(n.data.date)}>{formatDate(n.data.date)}</time>
+          <div>
+            <h2>{n.data.title}</h2>
+            <p class="item__summary">{n.data.summary}</p>
+            <div class="prose">
+              <Content />
+            </div>
+            {n.data.link && (
+              <a class="arrow-link" href={n.data.link}>
+                {n.data.linkLabel ?? '前往'} <Arrow />
+              </a>
+            )}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .lead a {
+    font-weight: 700;
+  }
+  .list {
+    padding-bottom: var(--section);
+  }
+  .item {
+    display: grid;
+    grid-template-columns: minmax(170px, 0.28fr) minmax(0, 1fr);
+    gap: 10px clamp(24px, 5vw, 80px);
+    padding-block: clamp(28px, 3.6vw, 48px);
+    border-top: 3px solid var(--ink);
+    scroll-margin-top: 24px;
+  }
+  .item time {
+    font-size: 0.9375rem;
+    font-weight: 800;
+    line-height: 2.2;
+  }
+  .item h2 {
+    font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+    line-height: 1.25;
+  }
+  .item__summary {
+    max-width: 40em;
+    margin-top: 12px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.75;
+  }
+  .item .prose:not(:empty) {
+    margin-top: 18px;
+  }
+  .item .arrow-link {
+    margin-top: 22px;
+  }
+  @media (max-width: 760px) {
+    .item {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

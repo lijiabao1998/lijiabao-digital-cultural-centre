@@ -1,0 +1,158 @@
+---
+// 全部館藏: every work in one list, grouped by area.
+import Base from '@layouts/Base.astro';
+import { AREAS, SITE, STATUS } from '@data/site';
+import { breadcrumbs } from '@lib/schema';
+import { areaOf, getWorks, workPath, workUrl } from '@lib/works';
+
+const works = await getWorks();
+const groups = AREAS.map((area) => ({ area, list: works.filter((w) => areaOf(w) === area.id) }));
+const description = `${SITE.name}目前公開的全部作品，共 ${works.length} 件，依展區排列。`;
+
+const schema = [
+  breadcrumbs([
+    { name: '首頁', path: '/' },
+    { name: '全部館藏', path: '/collection/' },
+  ]),
+  {
+    '@type': 'CollectionPage',
+    name: '全部館藏',
+    description,
+    url: `${SITE.url}/collection/`,
+    inLanguage: SITE.locale,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: works.length,
+      itemListElement: works.map((w, i) => ({ '@type': 'ListItem', position: i + 1, name: w.data.title, url: workUrl(w) })),
+    },
+  },
+];
+---
+
+<Base title="全部館藏" description={description} markdown="/llms.txt" schema={schema}>
+  <header class="wrap page-head">
+    <ol class="crumbs" aria-label="目前位置">
+      <li><a href="/">首頁</a></li>
+      <li aria-current="page">全部館藏</li>
+    </ol>
+    <h1>全部館藏</h1>
+    <p class="lead">目前公開 {works.length} 件作品，依展區排列。同一份清單也有 <a href="/api/works.json">JSON</a> 版本。</p>
+  </header>
+
+  <div class="wrap groups">
+    {
+      groups.map(({ area, list }) => (
+        <section class="group" aria-labelledby={`g-${area.id}`}>
+          <div class="group__head">
+            <h2 id={`g-${area.id}`}>
+              <a href={`/${area.id}/`}>
+                <span class="group__no">{area.no}</span>
+                {area.name}
+              </a>
+            </h2>
+            <p>
+              {list.length} {area.unit}
+            </p>
+          </div>
+          {list.length > 0 ? (
+            <ul class="rows">
+              {list.map((w) => (
+                <li>
+                  <a class="rows__title" href={workPath(w)}>
+                    {w.data.title}
+                  </a>
+                  <span class="rows__kind">{w.data.kind}</span>
+                  <span class="rows__year">{w.data.date.getUTCFullYear()}</span>
+                  <span class="status" data-status={w.data.status}>
+                    {STATUS[w.data.status].label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="group__empty">展品整理中</p>
+          )}
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .lead a {
+    font-weight: 700;
+  }
+  .groups {
+    padding-bottom: var(--section);
+  }
+  .group {
+    display: grid;
+    grid-template-columns: minmax(200px, 0.32fr) minmax(0, 1fr);
+    gap: 16px clamp(24px, 5vw, 80px);
+    padding-block: clamp(24px, 3vw, 40px);
+    border-top: 3px solid var(--ink);
+  }
+  .group__head h2 {
+    font-size: clamp(1.625rem, 2.8vw, 2.375rem);
+  }
+  .group__head a {
+    text-decoration: none;
+  }
+  .group__head a:hover {
+    text-decoration: underline;
+  }
+  .group__no {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+  .group__head p,
+  .group__empty {
+    margin-top: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .rows li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(90px, 0.5fr) 4em 6.5em;
+    align-items: baseline;
+    gap: 6px 20px;
+    padding-block: 14px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9063rem;
+  }
+  .rows li:first-child {
+    padding-top: 4px;
+  }
+  .rows__title {
+    font-size: 1.1875rem;
+    font-weight: 800;
+    line-height: 1.4;
+    text-decoration: none;
+  }
+  .rows__title:hover {
+    text-decoration: underline;
+  }
+  .rows__kind,
+  .rows__year {
+    color: var(--muted);
+    font-weight: 600;
+  }
+  @media (max-width: 760px) {
+    .group {
+      grid-template-columns: 1fr;
+    }
+    .rows li {
+      grid-template-columns: 1fr auto;
+    }
+    .rows__title {
+      grid-column: 1 / -1;
+    }
+    .rows__year {
+      display: none;
+    }
+  }
+</style>

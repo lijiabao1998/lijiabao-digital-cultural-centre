@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import Cover from './Cover.astro';
+import { STATUS, areaById } from '@data/site';
+import { areaOf, workPath, type Work } from '@lib/works';
+
+interface Props {
+  work: Work;
+  /** Show which area the work belongs to (off on an area's own page). */
+  showArea?: boolean;
+  /** Heading level of the title. */
+  level?: 'h2' | 'h3';
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+}
+const { work, showArea = true, level: H = 'h3', sizes = '(min-width: 1000px) 30vw, (min-width: 620px) 46vw, 92vw', loading = 'lazy' } = Astro.props;
+const d = work.data;
+const area = areaById(areaOf(work));
+---
+
+<article class="card">
+  <div class="card__media">
+    {
+      d.cover ? (
+        <Image src={d.cover} alt={d.coverAlt ?? ''} widths={[400, 640, 960]} sizes={sizes} loading={loading} />
+      ) : (
+        <Cover seed={work.id} />
+      )
+    }
+  </div>
+  <p class="card__meta">
+    {showArea && <span class="chip">{area.name}</span>}
+    <span>{d.kind}</span>
+    <span>{d.date.getUTCFullYear()}</span>
+  </p>
+  <H class="card__title">
+    <a href={workPath(work)}>{d.title}</a>
+  </H>
+  <p class="card__summary">{d.summary}</p>
+  <p class="card__foot">
+    <span class="status" data-status={d.status}>{STATUS[d.status].label}</span>
+  </p>
+</article>

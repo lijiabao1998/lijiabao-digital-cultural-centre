@@ -1,0 +1,48 @@
+---
+import Base from '@layouts/Base.astro';
+import Arrow from '@components/Arrow.astro';
+import { AREAS } from '@data/site';
+---
+
+<Base title="找不到這一頁" description="這個網址沒有對應的頁面。" noindex>
+  <section class="wrap nf">
+    <p class="eyebrow">404</p>
+    <h1>這個展間<br />是空的</h1>
+    <p class="lead">這個網址沒有對應的頁面。可能是網址打錯了，也可能是內容已經搬到別的展區。</p>
+    <ul>
+      <li>
+        <a class="btn" href="/">回到首頁 <Arrow /></a>
+      </li>
+      {
+        AREAS.map((a) => (
+          <li>
+            <a class="arrow-link" href={`/${a.id}/`}>
+              {a.name} <Arrow />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-block: clamp(56px, 9vw, 140px);
+  }
+  .nf h1 {
+    margin-top: 18px;
+    font-size: clamp(3rem, 9vw, 7.5rem);
+    line-height: 1.04;
+  }
+  .nf .lead {
+    margin-top: 28px;
+  }
+  .nf ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 36px;
+    margin-top: 40px;
+  }
+</style>

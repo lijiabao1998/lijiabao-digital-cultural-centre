@@ -1,0 +1,25 @@
+---
+// The mark: a heavy letter L — for 李 — drawn as the corner of a room, with one lilac square standing inside it.
+// The L is the wall of the centre; the square is whatever is on show.
+interface Props {
+  size?: number;
+  /** Colour of the square. Defaults to the lilac token. */
+  accent?: string;
+  title?: string;
+}
+const { size = 44, accent = 'var(--lilac-400)', title } = Astro.props;
+---
+
+<svg
+  class="mark"
+  width={size}
+  height={size}
+  viewBox="0 0 48 48"
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+>
+  <path d="M8 4h12v28h20v12H8z" fill="currentColor"></path>
+  <rect x="26" y="12" width="14" height="14" fill={accent}></rect>
+</svg>

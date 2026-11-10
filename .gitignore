@@ -1,0 +1,25 @@
+# build output
+dist/
+
+# generated types and caches
+.astro/
+.cache/
+.wrangler/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+
+# environment variables and secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/

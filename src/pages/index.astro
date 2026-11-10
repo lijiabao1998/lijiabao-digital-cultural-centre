@@ -1,0 +1,534 @@
+---
+// Home: entrance → featured → the four areas → news → about.
+import { Image } from 'astro:assets';
+import Base from '@layouts/Base.astro';
+import Arrow from '@components/Arrow.astro';
+import Cover from '@components/Cover.astro';
+import WorkCard from '@components/WorkCard.astro';
+import { AREAS, SITE, STATUS, areaById } from '@data/site';
+import { areaOf, formatDate, getFeatured, getNews, getWorks, isoDay, workPath } from '@lib/works';
+
+const works = await getWorks();
+const featured = await getFeatured();
+const news = (await getNews()).slice(0, 4);
+
+const [lead, ...restFeatured] = featured.length ? featured : works.slice(0, 4);
+const more = restFeatured.slice(0, 3);
+const count = (id: string) => works.filter((w) => areaOf(w) === id).length;
+---
+
+<Base markdown="/index.md">
+  <!-- 入口 -->
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="hero__text">
+        <p class="eyebrow">獨立 · 數位 · 全年開放</p>
+        <h1>一座獨立的<br />數位文化中心</h1>
+        <p class="lead">呈現影像、遊戲、歷史研究與互動體驗。</p>
+        <p class="hero__en">{SITE.taglineEn}</p>
+        <div class="hero__actions">
+          <a class="btn" href="#areas">進入展區 <Arrow /></a>
+          <a class="arrow-link" href="/about/">關於本中心 <Arrow /></a>
+        </div>
+      </div>
+
+      <div class="hero__art">
+        <svg viewBox="0 0 400 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="400" height="480" fill="var(--lilac-200)"></rect>
+          <rect x="248" y="0" width="152" height="152" fill="var(--lilac-300)"></rect>
+          <rect x="0" y="424" width="400" height="56" fill="var(--lilac-100)"></rect>
+          <path d="M72 56h80v288h176v80H72z" fill="var(--ink)"></path>
+          <rect x="200" y="200" width="96" height="96" fill="var(--violet)"></rect>
+        </svg>
+        <dl class="hero__label">
+          <dt>現正展出</dt>
+          <dd><b>{works.length}</b> 件作品</dd>
+          <dd><b>{AREAS.length}</b> 個展區</dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 精選展覽 -->
+  {
+    lead && (
+      <section class="section">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>
+              精選展覽<span class="en">Featured</span>
+            </h2>
+            <a class="arrow-link" href="/collection/">
+              全部館藏 <Arrow />
+            </a>
+          </div>
+
+          <article class="feature">
+            <div class="feature__media">
+              {lead.data.cover ? (
+                <Image
+                  src={lead.data.cover}
+                  alt={lead.data.coverAlt ?? ''}
+                  widths={[640, 960, 1400]}
+                  sizes="(min-width: 900px) 58vw, 92vw"
+                  loading="eager"
+                />
+              ) : (
+                <Cover seed={lead.id} />
+              )}
+            </div>
+            <div class="feature__body on-lilac">
+              <p class="card__meta">
+                <span class="chip">{areaById(areaOf(lead)).name}</span>
+                <span>{lead.data.kind}</span>
+                <span>{lead.data.date.getUTCFullYear()}</span>
+              </p>
+              <h3>
+                <a href={workPath(lead)}>{lead.data.title}</a>
+              </h3>
+              {lead.data.titleEn && <p class="feature__en">{lead.data.titleEn}</p>}
+              <p class="feature__summary">{lead.data.summary}</p>
+              <p class="feature__foot">
+                <span class="status" data-status={lead.data.status}>
+                  {STATUS[lead.data.status].label}
+                </span>
+                <span class="arrow-link" aria-hidden="true">
+                  參觀 <Arrow />
+                </span>
+              </p>
+            </div>
+          </article>
+
+          {more.length > 0 && (
+            <div class="card-grid feature-more">
+              {more.map((w) => (
+                <WorkCard work={w} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 四個展區：平面圖 -->
+  <section class="section section--lilac" id="areas">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>
+          四個展區<span class="en">Floor plan</span>
+        </h2>
+      </div>
+
+      <ul class="plan">
+        {
+          AREAS.map((a) => (
+            <li class={`room room--${a.id}`}>
+              <a href={`/${a.id}/`}>
+                <span class="room__no">{a.no}</span>
+                <span class="room__name">{a.name}</span>
+                <span class="room__en">{a.nameEn}</span>
+                <span class="room__intro">{a.intro}</span>
+                <span class="room__foot">
+                  <span>
+                    {count(a.id) > 0 ? `${count(a.id)} ${a.unit}作品` : '展品整理中'}
+                  </span>
+                  <Arrow />
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 最新動態 -->
+  {
+    news.length > 0 && (
+      <section class="section">
+        <div class="wrap">
+          <div class="section-head">
+            <h2>
+              最新動態<span class="en">News</span>
+            </h2>
+            <a class="arrow-link" href="/news/">
+              所有動態 <Arrow />
+            </a>
+          </div>
+          <ol class="news">
+            {news.map((n) => (
+              <li>
+                <time datetime={isoDay(n.data.date)}>{formatDate(n.data.date)}</time>
+                <div>
+                  <h3>
+                    <a href={n.data.link ?? `/news/#${n.id}`}>{n.data.title}</a>
+                  </h3>
+                  <p>{n.data.summary}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- 關於我們 -->
+  <section class="section about">
+    <div class="wrap about__in">
+      <div>
+        <p class="eyebrow">關於我們</p>
+        <h2>設在網路上的<br />獨立文化機構</h2>
+      </div>
+      <div class="about__text">
+        <p class="lead">
+          {SITE.name}收藏並公開影像、遊戲、歷史研究與互動實驗。每一件作品都有自己的介紹頁，寫明摘要、來源與完成狀態。
+        </p>
+        <ul class="about__points">
+          <li><b>一件作品，一頁介紹</b>圖片、摘要與入口都在同一頁。</li>
+          <li><b>寫明來源</b>作品引用了什麼，就列出什麼。</li>
+          <li><b>標示完成狀態</b>已完成、持續更新，或仍在實驗，一看就知道。</li>
+        </ul>
+        <a class="btn btn--ghost" href="/about/">認識本中心 <Arrow /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ── hero ── */
+  .hero {
+    padding-block: clamp(40px, 6vw, 96px) clamp(56px, 8vw, 120px);
+  }
+  .hero__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr);
+    align-items: center;
+    gap: clamp(32px, 6vw, 96px);
+  }
+  .hero h1 {
+    margin-top: clamp(16px, 2vw, 28px);
+    font-size: clamp(2.75rem, 7.4vw, 6.75rem);
+    line-height: 1.06;
+    letter-spacing: -0.01em;
+  }
+  .hero .lead {
+    margin-top: clamp(22px, 3vw, 40px);
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    font-weight: 700;
+    line-height: 1.6;
+  }
+  .hero__en {
+    margin-top: 12px;
+    max-width: 34em;
+    font-size: 0.9688rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 36px;
+    margin-top: clamp(30px, 4vw, 52px);
+  }
+  .hero__art {
+    position: relative;
+    aspect-ratio: 5 / 6;
+    max-height: 640px;
+    margin-bottom: 28px;
+  }
+  .hero__art svg {
+    width: 100%;
+    height: 100%;
+  }
+  /* A museum label pinned to the corner of the artwork. */
+  .hero__label {
+    position: absolute;
+    right: -1px;
+    bottom: -28px;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 2px 22px;
+    padding: 16px 22px 18px;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .hero__label dt {
+    grid-column: 1 / -1;
+    margin-bottom: 4px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+  }
+  .hero__label b {
+    margin-right: 0.15em;
+    font-size: 1.75rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  /* ── featured ── */
+  .feature {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+  .feature__media {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--lilac-100);
+  }
+  .feature__media :global(img),
+  .feature__media :global(svg) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .feature:hover .feature__media :global(img),
+  .feature:hover .feature__media :global(svg) {
+    transform: scale(1.03);
+  }
+  .feature__body {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(24px, 3.4vw, 52px);
+    background: var(--lilac-200);
+  }
+  .feature__body .card__meta {
+    margin-top: 0;
+    color: var(--ink);
+  }
+  .feature__body h3 {
+    margin-top: clamp(14px, 2vw, 24px);
+    font-size: clamp(1.875rem, 3.4vw, 3rem);
+    line-height: 1.14;
+  }
+  .feature__body h3 a {
+    text-decoration: none;
+  }
+  .feature__body h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .feature:hover h3 a {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+  }
+  .feature__en {
+    margin-top: 8px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .feature__summary {
+    margin-top: clamp(14px, 1.8vw, 22px);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+  }
+  .feature__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: auto;
+    padding-top: 28px;
+  }
+  .feature:hover .feature__foot :global(svg) {
+    transform: translateX(5px);
+  }
+  .feature-more {
+    margin-top: clamp(40px, 5vw, 72px);
+  }
+
+  /* ── floor plan ── */
+  /* The black background shows through the gaps: those are the walls. */
+  .plan {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 3px;
+    padding: 3px;
+    background: var(--ink);
+  }
+  .room {
+    display: flex;
+    background: var(--paper);
+  }
+  .room--films {
+    grid-row: 1 / 3;
+  }
+  .room--games {
+    grid-column: 2 / 4;
+  }
+  .room--films {
+    background: var(--lilac-200);
+  }
+  .room--lab {
+    background: var(--lilac-50);
+  }
+  .room a {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: clamp(220px, 22vw, 300px);
+    padding: clamp(20px, 2.6vw, 36px);
+    text-decoration: none;
+    transition:
+      background 0.18s ease,
+      color 0.18s ease;
+  }
+  .room__no {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+  .room__name {
+    margin-top: clamp(10px, 1.4vw, 18px);
+    font-size: clamp(1.875rem, 3.6vw, 3.25rem);
+    font-weight: 900;
+    line-height: 1.1;
+  }
+  .room--films .room__name {
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+  }
+  .room__en {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .room__intro {
+    margin-top: 16px;
+    max-width: 26em;
+    font-size: 0.9688rem;
+    line-height: 1.75;
+  }
+  .room__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: auto;
+    padding-top: 24px;
+    font-size: 0.875rem;
+    font-weight: 800;
+  }
+  .room__foot :global(svg) {
+    width: 2em;
+    height: 1em;
+    transition: transform 0.2s ease;
+  }
+  .room a:hover,
+  .room a:focus-visible {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .room a:hover .room__foot :global(svg) {
+    transform: translateX(6px);
+  }
+
+  /* ── news ── */
+  .news li {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.3fr) minmax(0, 1fr);
+    gap: 8px 32px;
+    padding-block: clamp(20px, 2.4vw, 30px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .news li:first-child {
+    padding-top: 0;
+  }
+  .news time {
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 2;
+  }
+  .news h3 {
+    font-size: clamp(1.1875rem, 1.7vw, 1.4375rem);
+    line-height: 1.4;
+  }
+  .news h3 a {
+    text-decoration: none;
+  }
+  .news h3 a:hover {
+    text-decoration: underline;
+  }
+  .news p {
+    margin-top: 6px;
+    max-width: 46em;
+    color: var(--muted);
+    font-size: 0.9688rem;
+  }
+
+  /* ── about ── */
+  .about {
+    border-top: 1px solid var(--ink);
+  }
+  .about__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(32px, 6vw, 96px);
+  }
+  .about h2 {
+    margin-top: 16px;
+    font-size: clamp(2.125rem, 4.6vw, 4rem);
+    line-height: 1.12;
+  }
+  .about__points {
+    margin-block: clamp(24px, 3vw, 40px);
+    border-top: 1px solid var(--ink);
+  }
+  .about__points li {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.42fr) minmax(0, 1fr);
+    gap: 4px 24px;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9688rem;
+  }
+  .about__points b {
+    font-weight: 800;
+  }
+
+  @media (max-width: 900px) {
+    .hero__in,
+    .feature,
+    .about__in {
+      grid-template-columns: 1fr;
+    }
+    .hero__art {
+      aspect-ratio: 4 / 3;
+      order: -1;
+    }
+    .plan {
+      grid-template-columns: 1fr 1fr;
+    }
+    .room--films,
+    .room--games {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+    .news li,
+    .about__points li {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .plan {
+      grid-template-columns: 1fr;
+    }
+    .room a {
+      min-height: 0;
+    }
+  }
+</style>
