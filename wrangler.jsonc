@@ -2,12 +2,17 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   // Static assets only: no `main`, no bindings.
   // Cloudflare Workers Builds runs `npm run build` and then `npx wrangler deploy`.
-  // The custom domain (lijiabao.uk) is attached in the Cloudflare dashboard once the first version is approved.
+  // The custom domain is declared here, so `wrangler deploy` attaches lijiabao.uk and keeps its DNS record.
   "name": "lijiabao-digital-cultural-centre",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
-  }
+  },
+  // Only lijiabao.uk serves the site; the workers.dev address is switched off to avoid a duplicate copy.
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "lijiabao.uk", "custom_domain": true }
+  ]
 }
