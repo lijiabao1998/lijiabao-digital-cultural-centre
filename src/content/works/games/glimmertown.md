@@ -10,7 +10,7 @@ status: ongoing
 cover: ../../../assets/covers/game-glimmertown.jpg
 coverAlt: 遊戲畫面。夜晚的等距像素城市，有道路、住宅、水塔與電廠，下方寫著「微光小鎮 GLIMMERVILLE・像素城市建造」。
 tech: [HTML, JavaScript, Canvas]
-launchUrl: https://game.lijiabao.uk/glimmertown/
+launchUrl: https://lijiabao.uk/games/glimmertown/play/
 repoUrl: https://github.com/lijiabao1998/glimmertown
 related: [lab/glimmertown-3d, lab/glimmertown-lab]
 featured: 3

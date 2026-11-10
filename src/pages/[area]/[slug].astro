@@ -160,7 +160,7 @@ const schema = [
         <div class="facts__actions">
           {
             d.launchUrl && (
-              <a class="btn" href={d.launchUrl} rel="noopener">
+              <a class="btn" href={d.launchUrl} rel="noopener" data-astro-prefetch="false">
                 {area.action} <Arrow />
               </a>
             )

@@ -10,7 +10,7 @@ statusNote: 鍵鼠與觸控原型
 cover: ../../../assets/covers/game-shanghaisurvival.jpg
 coverAlt: 遊戲主視覺。黃昏的上海街頭，一個背著背包的人站在積水的巷口，遠處是東方明珠塔與陸家嘴的高樓。
 tech: [Three.js, TypeScript, Vite]
-launchUrl: https://game.lijiabao.uk/shanghaisurvival/
+launchUrl: https://lijiabao.uk/games/shanghaisurvival/play/
 repoUrl: https://github.com/lijiabao1998/shanghaisurvival
 sources:
   - title: CMAB

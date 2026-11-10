@@ -3,9 +3,11 @@
 //   2. every internal link and asset reference in every HTML page resolves to a file in dist/
 //   3. every URL in sitemap.xml has a page, and every page is in sitemap.xml
 //   4. every page has a title, a description, a canonical URL and valid JSON-LD
+//   5. every game that is played on this domain is known to the gateway (gateway/), and the other way round
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { GAMES } from '../gateway/src/games.js';
 
 const DIST = fileURLToPath(new URL('../dist/', import.meta.url));
 const ORIGIN = 'https://lijiabao.uk';
@@ -25,9 +27,13 @@ const files = walk(DIST);
 const rel = (f) => '/' + relative(DIST, f).split(sep).join('/');
 const has = new Set(files.map(rel));
 
+/** Play addresses are not files in dist/: the gateway Worker answers them. */
+const playPaths = new Set(GAMES.map((g) => g.play));
+
 /** Does a root-relative URL path resolve the way the host serves it? */
 const resolves = (path) => {
   const p = decodeURIComponent(path.split('#')[0].split('?')[0]);
+  if (playPaths.has(p)) return true;
   if (p === '' || p === '/') return has.has('/index.html');
   if (has.has(p)) return true;
   if (p.endsWith('/')) return has.has(`${p}index.html`);
@@ -107,6 +113,26 @@ if (has.has('/sitemap.xml')) {
     else if (!resolves(u.slice(ORIGIN.length))) fail(`sitemap: no page for ${u}`);
   }
   for (const p of pagePaths) if (!inMap.has(p)) fail(`sitemap: page ${p} is not listed`);
+}
+
+// 5. games on this domain ↔ gateway
+if (has.has('/api/works.json')) {
+  const text = readFileSync(join(DIST, 'api/works.json'), 'utf8');
+  const linked = new Set(
+    [...text.matchAll(/"launchUrl":\s*"([^"]+)"/g)]
+      .map((m) => m[1])
+      .filter((u) => u.startsWith(`${ORIGIN}/`))
+      .map((u) => u.slice(ORIGIN.length)),
+  );
+  const routes = readFileSync(fileURLToPath(new URL('../gateway/wrangler.jsonc', import.meta.url)), 'utf8');
+  for (const p of linked) if (!playPaths.has(p)) fail(`gateway: ${p} is linked from a work page but missing in gateway/src/games.js`);
+  for (const g of GAMES) {
+    if (!g.play.endsWith('/play/')) fail(`gateway: ${g.play} is not /<area>/<work>/play/`);
+    if (!linked.has(g.play)) fail(`gateway: ${g.play} has no work page that links to it`);
+    if (!resolves(g.play.slice(0, -'play/'.length))) fail(`gateway: ${g.play} has no work page`);
+    if (!routes.includes(`"lijiabao.uk${g.play.slice(0, -1)}*"`)) fail(`gateway: no route for ${g.play} in gateway/wrangler.jsonc`);
+    if (g.alias && !routes.includes(`"lijiabao.uk${g.alias}*"`)) fail(`gateway: no route for ${g.alias} in gateway/wrangler.jsonc`);
+  }
 }
 
 // llms.txt links

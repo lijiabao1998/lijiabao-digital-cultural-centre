@@ -119,8 +119,30 @@ src/
 public/                            圖示、社群圖、_headers
 scripts/og.mjs                     產生社群圖與圖示
 scripts/check-dist.mjs             建置後檢查
+gateway/                           遊戲閘道（獨立的 Worker，見下方「遊戲」）
 ```
 
 ## 部署
 
 Cloudflare Workers Builds 連接這個 repo：推送到 `main` 之後自動執行 `npm run build`，再執行 `npx wrangler deploy`。設定在 `wrangler.jsonc`：網域 `lijiabao.uk` 也宣告在裡面，`workers.dev` 位址已關閉。建置用的 Node 版本寫在 `.node-version`。
+
+## 遊戲
+
+遊戲不放在這個 repo 裡。每款遊戲仍由自己的 repo 建置、發布到 GitHub Pages；`gateway/` 是一個獨立的 Cloudflare Worker，把它們接到主網域：
+
+- `lijiabao.uk/games/defendtaipei/` 是作品頁（這個網站）。
+- `lijiabao.uk/games/defendtaipei/play/` 是遊戲本身（閘道把該 repo 發布的檔案原樣轉送過來）。
+
+閘道只回應 `gateway/wrangler.jsonc` 列出的網址，網站其餘部分仍是純靜態檔案。Cloudflare 上它是另一個專案（`lijiabao-games-gateway`，根目錄 `/gateway`），同樣是推送到 `main` 就自動部署。
+
+**新增一款可以在主網域遊玩的遊戲**，三處要一起改，`npm run build` 會檢查它們是否一致：
+
+1. `gateway/src/games.js`：加一行（遊玩網址、repo 名稱）。
+2. `gateway/wrangler.jsonc`：加一條對應的路由。
+3. 作品的 Markdown：`launchUrl` 寫成 `https://lijiabao.uk/<展區>/<slug>/play/`。
+
+**存檔**放在玩家的瀏覽器裡（localStorage 與 IndexedDB），綁在網址上。瀏覽器第一次進入任何一個遊玩網址時，閘道會先送它到 `…/play/__saves`：這一頁向舊網址 `game.lijiabao.uk/save-export.html` 要來存檔，把這裡還沒有的複製進來，再進入遊戲。舊網址的資料不會被刪除，這裡已有的存檔不會被覆蓋。`gateway/save-export.html` 是那一頁的原稿，實際發布在 `lijiabao1998.github.io` 這個 repo。
+
+**限制**：閘道每轉送一個檔案算一次 Worker 請求，Cloudflare 免費方案每天十萬次（全帳號合計）。超過之後當天遊戲會打不開，網站本身不受影響。
+
+**還沒做**：`game.lijiabao.uk` 的舊網址仍照常運作，沒有轉址。微光小鎮的發布流程會逐位元組比對 `game.lijiabao.uk/glimmertown/` 上線的內容，舊網域一旦改成轉址，它的發布就會失敗；要先在那個 repo 裡把驗證的網址改掉。

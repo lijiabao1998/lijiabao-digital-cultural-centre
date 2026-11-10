@@ -11,7 +11,7 @@ statusNote: v0.1；採用合成參數，尚未通過真實飛行器驗證
 cover: ../../../assets/covers/lab-fpv.jpg
 coverAlt: 模擬器畫面。跑道盡頭有幾道橘色的門，左側面板顯示「0 / 5 gates」，下方寫著「物理 FPV 模擬器」。
 tech: [TypeScript, three.js, Rapier, Vite]
-launchUrl: https://game.lijiabao.uk/fpv/
+launchUrl: https://lijiabao.uk/lab/fpv/play/
 repoUrl: https://github.com/lijiabao1998/fpv
 featured: 4
 ---

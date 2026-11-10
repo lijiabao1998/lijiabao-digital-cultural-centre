@@ -26,6 +26,13 @@
 
 `robots.txt` 全部允許，並提供 `llms.txt`、`llms-full.txt`、每頁的 `.md` 版本、`/api/works.json`、feed 與 sitemap。這些都由 `src/lib/` 產生，新增頁面類型時要一併接上 `src/lib/pages.ts`。
 
+## 遊戲
+
+- 遊戲由各自的 repo 發布；這個 repo 的 `gateway/` 只負責把它們接到 `lijiabao.uk/<展區>/<slug>/play/`，並在第一次進入時帶上舊網址的存檔。細節在 `README.md` 的「遊戲」。
+- `gateway/src/games.js`、`gateway/wrangler.jsonc` 的路由、作品的 `launchUrl` 三處要一致，建置檢查會擋。
+- 不要動 `game.lijiabao.uk` 的 DNS 或 GitHub Pages 的自訂網域：微光小鎮（`glimmertown`）的發布驗證依賴那個網址原樣運作。要改先問站主。
+- 其他遊戲 repo 各有自己的流程（PR、任務卡、發布驗證），改之前先讀該 repo 的 `AGENTS.md` 或 `CLAUDE.md`。
+
 ## 改完之後
 
 `npm run build` 必須通過（包含 `scripts/check-dist.mjs`）。推送到 `main` 會自動部署到正式網站。

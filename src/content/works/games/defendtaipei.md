@@ -11,7 +11,7 @@ statusNote: 生存原型，仍在持續更新
 cover: ../../../assets/covers/game-defendtaipei.jpg
 coverAlt: 遊戲畫面。夜晚的街區俯視圖，有公寓、路口、斑馬線與路燈，畫面上方顯示天數與時間。
 tech: [three.js, TypeScript, Vite]
-launchUrl: https://game.lijiabao.uk/defendtaipei/
+launchUrl: https://lijiabao.uk/games/defendtaipei/play/
 repoUrl: https://github.com/lijiabao1998/defendtaipei
 sources:
   - title: OpenStreetMap

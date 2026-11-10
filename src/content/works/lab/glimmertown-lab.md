@@ -9,7 +9,7 @@ statusNote: 與主線分開演進，內容會持續調整
 cover: ../../../assets/covers/lab-glimmertown-lab.jpg
 coverAlt: 實驗畫面。等距視角的像素城市，河邊有港口與起重機，後方是成排的高樓。
 tech: [HTML, JavaScript, Canvas]
-launchUrl: https://game.lijiabao.uk/GlimmerTown-lab/
+launchUrl: https://lijiabao.uk/lab/glimmertown-lab/play/
 repoUrl: https://github.com/lijiabao1998/GlimmerTown-lab
 related: [games/glimmertown, lab/glimmertown-3d]
 ---

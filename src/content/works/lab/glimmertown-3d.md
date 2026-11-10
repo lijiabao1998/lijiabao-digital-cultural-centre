@@ -9,7 +9,7 @@ statusNote: 目前以建造為主，一生與考古暫緩
 cover: ../../../assets/covers/lab-glimmertown-3d.jpg
 coverAlt: 實驗畫面。一座等距視角的像素城市，四周是草地、河流與海岸。
 tech: [three.js, TypeScript, Vite]
-launchUrl: https://game.lijiabao.uk/GlimmerTown3D-lab/
+launchUrl: https://lijiabao.uk/lab/glimmertown-3d/play/
 repoUrl: https://github.com/lijiabao1998/GlimmerTown3D-lab
 related: [games/glimmertown, lab/glimmertown-lab]
 ---
