@@ -1,8 +1,11 @@
 // Which game is served at which address.
 //
-//   play   the address under lijiabao.uk where the game is played (must end in /play/)
-//   repo   the GitHub repository that publishes it, as it appears in its GitHub Pages address
-//   alias  only for games built with an absolute path: their files ask for /<alias>/assets/…
+//   play           the address under lijiabao.uk where the game is played (must end in /play/)
+//   repo           the GitHub repository that publishes it, as it appears in its GitHub Pages address
+//   alias          only for games built with an absolute path: their files ask for /<alias>/assets/…
+//   keepOld        after the switch of the old domain, leave game.lijiabao.uk/<repo>/ exactly as it is
+//                  (no redirect, same bytes) because the repository's own release checks read it
+//   cachePrefixes  cache names an older build's service worker created on the old domain
 //
 // When this list changes, the routes in ../wrangler.jsonc and the `launchUrl` of the work
 // page in src/content/works/ must change with it.
@@ -14,11 +17,22 @@ export const PAGES_ORIGIN = 'https://game.lijiabao.uk';
 export const SAVES_ORIGIN = 'https://game.lijiabao.uk';
 export const SAVES_EXPORT_PATH = '/save-export.html';
 
+/** The old games domain. Not routed to this Worker until the switch; see old-host.js. */
+export const OLD_HOST = 'game.lijiabao.uk';
+
 export const GAMES = [
-  { play: '/games/defendtaipei/play/', repo: 'defendtaipei', alias: '/defendtaipei/' },
-  { play: '/games/glimmertown/play/', repo: 'glimmertown' },
+  { play: '/games/defendtaipei/play/', repo: 'defendtaipei', alias: '/defendtaipei/', cachePrefixes: ['dt-'] },
+  // keepOld until lijiabao1998/glimmertown has merged T721 (its release checks then read github.io).
+  { play: '/games/glimmertown/play/', repo: 'glimmertown', keepOld: true },
   { play: '/games/shanghaisurvival/play/', repo: 'shanghaisurvival' },
   { play: '/lab/fpv/play/', repo: 'fpv', alias: '/fpv/' },
   { play: '/lab/glimmertown-3d/play/', repo: 'GlimmerTown3D-lab' },
   { play: '/lab/glimmertown-lab/play/', repo: 'GlimmerTown-lab' },
 ];
+
+/** Even older addresses on the old domain that already forwarded to a game. */
+export const OLD_ALIASES = {
+  '/DefendTaipei-Lab/': 'defendtaipei',
+  '/GlimmerTown/': 'glimmertown',
+  '/Physical-Fpv-Simulator/': 'fpv',
+};

@@ -13,7 +13,8 @@
 //
 // The list of games is in games.js. The work pages link here through `launchUrl`.
 
-import { GAMES, PAGES_ORIGIN, SAVES_ORIGIN } from './games.js';
+import { GAMES, OLD_HOST, PAGES_ORIGIN, SAVES_ORIGIN } from './games.js';
+import { oldHost } from './old-host.js';
 import { savesPage } from './saves-page.js';
 
 const COOKIE = 'lj_saves';
@@ -24,6 +25,7 @@ const FORWARDED = ['accept', 'accept-language', 'if-none-match', 'if-modified-si
 export default {
   async fetch(request) {
     const url = new URL(request.url);
+    if (url.hostname === OLD_HOST) return oldHost(request, url);
     const hit = match(url.pathname);
     if (!hit) return fetch(request); // not ours: let the site answer
     const { game, kind, rest } = hit;

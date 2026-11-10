@@ -145,4 +145,20 @@ Cloudflare Workers Builds 連接這個 repo：推送到 `main` 之後自動執�
 
 **限制**：閘道每轉送一個檔案算一次 Worker 請求，Cloudflare 免費方案每天十萬次（全帳號合計）。超過之後當天遊戲會打不開，網站本身不受影響。
 
-**還沒做**：`game.lijiabao.uk` 的舊網址仍照常運作，沒有轉址。微光小鎮的發布流程會逐位元組比對 `game.lijiabao.uk/glimmertown/` 上線的內容，舊網域一旦改成轉址，它的發布就會失敗；要先在那個 repo 裡把驗證的網址改掉。
+### 舊網域的切換（還沒做）
+
+`game.lijiabao.uk` 的舊網址目前照常由 GitHub Pages 回應，沒有轉址。切換之後由閘道回應：已搬的遊戲 301 到新的遊玩網址，其餘頁面原樣轉送。程式已經寫好（`gateway/src/old-host.js`），但在切換之前不會被用到。
+
+不能直接切，因為微光小鎮（`lijiabao1998/glimmertown`）的發佈流程會逐位元組讀 `game.lijiabao.uk/glimmertown/`，也用 GitHub 回報的 Pages 網址做實機驗證。它那邊的卡是 T721（PR #88），把驗證來源改成 `lijiabao1998.github.io`；切換前那個 PR 會紅，切換後才會綠。
+
+站主點頭之後的順序：
+
+1. `lijiabao1998.github.io` 倉庫：刪掉 `CNAME` 檔並清掉 Pages 的自訂網域。GitHub Pages 的網址變回 `lijiabao1998.github.io/<repo>/`。
+2. Cloudflare：刪掉 `game` 那筆指向 GitHub 的 DNS 紀錄。
+3. 這個 repo：`gateway/src/games.js` 的 `PAGES_ORIGIN` 改成 `https://lijiabao1998.github.io`；`gateway/wrangler.jsonc` 的 `routes` 加上 `{ "pattern": "game.lijiabao.uk", "custom_domain": true }`。推上去。
+4. 檢查：舊網址轉址、`game.lijiabao.uk/save-export.html` 還在、`game.lijiabao.uk/glimmertown/` 仍原樣回 200。
+5. 重跑 glimmertown PR #88 的 CI，綠了照它的程序合併，等 main 那一輪的部署與驗證也綠。這之前不要讓 glimmertown 有別的 PR 合進 main。
+6. 最後把 `games.js` 裡 glimmertown 的 `keepOld` 拿掉，它的舊網址才開始轉址。
+
+第 1 到第 3 步之間舊網址會短暫打不開（幾分鐘），三步要連著做。回復的做法是反過來：把自訂網域設回去、DNS 紀錄加回來、`PAGES_ORIGIN` 改回來。
+
