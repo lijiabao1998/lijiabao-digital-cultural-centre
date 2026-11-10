@@ -123,4 +123,4 @@ scripts/check-dist.mjs             建置後檢查
 
 ## 部署
 
-Cloudflare Workers Builds 連接這個 repo：推送到 `main` 之後自動執行 `npm run build`，再執行 `npx wrangler deploy`。設定在 `wrangler.jsonc`。
+Cloudflare Workers Builds 連接這個 repo：推送到 `main` 之後自動執行 `npm run build`，再執行 `npx wrangler deploy`。設定在 `wrangler.jsonc`：網域 `lijiabao.uk` 也宣告在裡面，`workers.dev` 位址已關閉。建置用的 Node 版本寫在 `.node-version`。
