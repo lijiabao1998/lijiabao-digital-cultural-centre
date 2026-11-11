@@ -24,6 +24,9 @@ export const PAGES_FALLBACK = null;
 export const SAVES_ORIGIN = 'https://game.lijiabao.uk';
 export const SAVES_EXPORT_PATH = '/save-export.html';
 
+/** The address with www: not a second copy of the site, only a way to the real one. */
+export const WWW_HOST = 'www.lijiabao.uk';
+
 /** The old games domain. This Worker answers it since the switch on 2026-11-11; see old-host.js. */
 export const OLD_HOST = 'game.lijiabao.uk';
 

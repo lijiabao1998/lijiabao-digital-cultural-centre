@@ -18,6 +18,8 @@
     { "pattern": "lijiabao.uk/defendtaipei/*", "zone_name": "lijiabao.uk" },
     { "pattern": "lijiabao.uk/fpv/*", "zone_name": "lijiabao.uk" },
     // The old games domain: redirects, the save hand-over page and unchanged files (src/old-host.js).
-    { "pattern": "game.lijiabao.uk", "custom_domain": true }
+    { "pattern": "game.lijiabao.uk", "custom_domain": true },
+    // www: every address is sent on to lijiabao.uk without www.
+    { "pattern": "www.lijiabao.uk", "custom_domain": true }
   ]
 }

@@ -145,6 +145,10 @@ Cloudflare Workers Builds 連接這個 repo：推送到 `main` 之後自動執�
 
 **限制**：閘道每轉送一個檔案算一次 Worker 請求，Cloudflare 免費方案每天十萬次（全帳號合計）。超過之後當天遊戲會打不開，網站本身不受影響。
 
+### www.lijiabao.uk
+
+帶 www 的網址也是閘道的自訂網域，只做一件事：301 轉到不帶 www 的同一個路徑。它不是網站的第二份副本。
+
 ### 舊網域 game.lijiabao.uk（2026-11-11 已切換）
 
 `game.lijiabao.uk` 現在是閘道的自訂網域（`gateway/wrangler.jsonc`），由 `gateway/src/old-host.js` 回應：
