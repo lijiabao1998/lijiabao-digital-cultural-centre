@@ -145,20 +145,21 @@ Cloudflare Workers Builds 連接這個 repo：推送到 `main` 之後自動執�
 
 **限制**：閘道每轉送一個檔案算一次 Worker 請求，Cloudflare 免費方案每天十萬次（全帳號合計）。超過之後當天遊戲會打不開，網站本身不受影響。
 
-### 舊網域的切換（還沒做）
+### 舊網域 game.lijiabao.uk（2026-11-11 已切換）
 
-`game.lijiabao.uk` 的舊網址目前照常由 GitHub Pages 回應，沒有轉址。切換之後由閘道回應：已搬的遊戲 301 到新的遊玩網址，其餘頁面原樣轉送。程式已經寫好（`gateway/src/old-host.js`），但在切換之前不會被用到。
+`game.lijiabao.uk` 現在是閘道的自訂網域（`gateway/wrangler.jsonc`），由 `gateway/src/old-host.js` 回應：
 
-不能直接切，因為微光小鎮（`lijiabao1998/glimmertown`）的發佈流程會逐位元組讀 `game.lijiabao.uk/glimmertown/`，也用 GitHub 回報的 Pages 網址做實機驗證。它那邊的卡是 T721（PR #88），把驗證來源改成 `lijiabao1998.github.io`；切換前那個 PR 會紅，切換後才會綠。
+- 已搬的遊戲 301 到新的遊玩網址，網址後面的路徑與參數照帶。
+- `/save-export.html` 由閘道提供（原稿是 `gateway/save-export.html`），新網址靠它把舊存檔帶過來。
+- 其餘頁面原樣轉送 GitHub Pages 的內容：隱私權政策、使用條款、圖片，以及沒有放進文化中心的作品。
+- 舊版遊戲留在玩家瀏覽器裡的 service worker，會被一支自我註銷的腳本接手，下一次造訪才到得了轉址。
 
-站主點頭之後的順序：
+GitHub Pages 這邊，使用者站 `lijiabao1998.github.io` 已經沒有自訂網域，各遊戲發佈在 `lijiabao1998.github.io/<repo>/`，閘道從那裡取檔（`games.js` 的 `PAGES_ORIGIN`）。**不要再把自訂網域設回去**：設回去 GitHub 會把預設網址轉走，所有遊玩網址都會壞。
 
-1. `lijiabao1998.github.io` 倉庫：刪掉 `CNAME` 檔並清掉 Pages 的自訂網域。GitHub Pages 的網址變回 `lijiabao1998.github.io/<repo>/`。
-2. Cloudflare：刪掉 `game` 那筆指向 GitHub 的 DNS 紀錄。
-3. 這個 repo：`gateway/src/games.js` 的 `PAGES_ORIGIN` 改成 `https://lijiabao1998.github.io`；`gateway/wrangler.jsonc` 的 `routes` 加上 `{ "pattern": "game.lijiabao.uk", "custom_domain": true }`。推上去。
-4. 檢查：舊網址轉址、`game.lijiabao.uk/save-export.html` 還在、`game.lijiabao.uk/glimmertown/` 仍原樣回 200。
-5. 重跑 glimmertown PR #88 的 CI，綠了照它的程序合併，等 main 那一輪的部署與驗證也綠。這之前不要讓 glimmertown 有別的 PR 合進 main。
-6. 最後把 `games.js` 裡 glimmertown 的 `keepOld` 拿掉，它的舊網址才開始轉址。
+**還剩一步**：微光小鎮的舊網址 `game.lijiabao.uk/glimmertown/` 目前原樣回 200、不轉址（`games.js` 裡標了 `keepOld`），因為 `lijiabao1998/glimmertown` main 上的發佈工具還在讀這個網址。等它的 T721（PR #88）合併、main 那一輪的部署與驗證都綠了，把 `keepOld` 拿掉，它的舊網址才開始轉址。
 
-第 1 到第 3 步之間舊網址會短暫打不開（幾分鐘），三步要連著做。回復的做法是反過來：把自訂網域設回去、DNS 紀錄加回來、`PAGES_ORIGIN` 改回來。
+**切換時學到的**：
 
+- 把一個已經有 DNS 紀錄的網域接到 Worker 之前，要先在 Cloudflare 把那筆紀錄刪掉。自動建置的 wrangler 不會覆蓋它，部署會失敗（`already has externally managed DNS records`）。
+- 刪 DNS 紀錄要登入 Cloudflare 儀表板，先確認登入還在再開始。這次少了這一步，舊網址因此停了約二十分鐘。
+- GitHub 拿掉自訂網域時會連憑證一起刪，設回去要重新簽發，所以切到一半只能往前修。

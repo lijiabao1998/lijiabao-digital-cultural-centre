@@ -3,7 +3,8 @@
 import template from './saves-page.html';
 import { SAVES_ORIGIN, SAVES_EXPORT_PATH } from './games.js';
 
-const WAIT_MS = 6000;
+// Long enough for a slow connection: a visitor who is let through without the copy starts with no saves.
+const WAIT_MS = 12000;
 const attr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
 export function savesPage({ game, to }) {

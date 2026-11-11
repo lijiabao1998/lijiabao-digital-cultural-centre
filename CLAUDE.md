@@ -30,7 +30,8 @@
 
 - 遊戲由各自的 repo 發布；這個 repo 的 `gateway/` 只負責把它們接到 `lijiabao.uk/<展區>/<slug>/play/`，並在第一次進入時帶上舊網址的存檔。細節在 `README.md` 的「遊戲」。
 - `gateway/src/games.js`、`gateway/wrangler.jsonc` 的路由、作品的 `launchUrl` 三處要一致，建置檢查會擋。
-- 不要動 `game.lijiabao.uk` 的 DNS 或 GitHub Pages 的自訂網域：微光小鎮（`glimmertown`）的發布驗證依賴那個網址原樣運作。要改先問站主。
+- `game.lijiabao.uk` 是閘道的自訂網域（舊網址轉址、存檔匯出頁、其餘頁面原樣轉送）；各遊戲的 GitHub Pages 在預設網址 `lijiabao1998.github.io/<repo>/`。不要把 GitHub Pages 的自訂網域設回去，也不要動這個網域的 DNS；要改先問站主。
+- `games.js` 裡標 `keepOld` 的遊戲，舊網址必須原樣回應、不能轉址：那個 repo 自己的發佈驗證還在讀它。拿掉之前先確認那邊已經改好。
 - 其他遊戲 repo 各有自己的流程（PR、任務卡、發布驗證），改之前先讀該 repo 的 `AGENTS.md` 或 `CLAUDE.md`。
 
 ## 改完之後
