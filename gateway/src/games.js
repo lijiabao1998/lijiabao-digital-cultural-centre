@@ -29,8 +29,8 @@ export const OLD_HOST = 'game.lijiabao.uk';
 
 export const GAMES = [
   { play: '/games/defendtaipei/play/', repo: 'defendtaipei', alias: '/defendtaipei/', cachePrefixes: ['dt-'] },
-  // keepOld until lijiabao1998/glimmertown has merged T721 (its release checks then read github.io).
-  { play: '/games/glimmertown/play/', repo: 'glimmertown', keepOld: true },
+  // Redirected since 2026-11-11: lijiabao1998/glimmertown merged T721, so its release checks read github.io.
+  { play: '/games/glimmertown/play/', repo: 'glimmertown', cachePrefixes: ['glimmerville-main-shell-'] },
   { play: '/games/shanghaisurvival/play/', repo: 'shanghaisurvival' },
   { play: '/lab/fpv/play/', repo: 'fpv', alias: '/fpv/' },
   { play: '/lab/glimmertown-3d/play/', repo: 'GlimmerTown3D-lab' },

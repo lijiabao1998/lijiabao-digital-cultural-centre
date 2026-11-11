@@ -156,7 +156,7 @@ Cloudflare Workers Builds 連接這個 repo：推送到 `main` 之後自動執�
 
 GitHub Pages 這邊，使用者站 `lijiabao1998.github.io` 已經沒有自訂網域，各遊戲發佈在 `lijiabao1998.github.io/<repo>/`，閘道從那裡取檔（`games.js` 的 `PAGES_ORIGIN`）。**不要再把自訂網域設回去**：設回去 GitHub 會把預設網址轉走，所有遊玩網址都會壞。
 
-**還剩一步**：微光小鎮的舊網址 `game.lijiabao.uk/glimmertown/` 目前原樣回 200、不轉址（`games.js` 裡標了 `keepOld`），因為 `lijiabao1998/glimmertown` main 上的發佈工具還在讀這個網址。等它的 T721（PR #88）合併、main 那一輪的部署與驗證都綠了，把 `keepOld` 拿掉，它的舊網址才開始轉址。
+微光小鎮的舊網址晚一步才轉址：它的倉庫（`lijiabao1998/glimmertown`）有一套會逐位元組讀線上檔案的發佈驗證，要先把驗證來源改成 `lijiabao1998.github.io`（那邊的 T721，PR #88，2026-11-11 合併，main 的部署與線上驗證都通過）。`games.js` 的 `keepOld` 就是為這種情況留的：標了它的遊戲，舊網址原樣回應、不轉址。目前沒有遊戲標它。
 
 **切換時學到的**：
 
