@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/wrangler/config-schema.json",
   // The games gateway: a separate Worker, so the site itself stays plain static files.
-  // It only answers the addresses listed here; everything else on lijiabao.uk is the site.
+  // On lijiabao.uk it only answers the addresses listed here; everything else there is the site.
   // One line per game in src/games.js (the play address, plus the alias if the game has one).
   "name": "lijiabao-games-gateway",
   "main": "src/index.js",
@@ -16,6 +16,8 @@
     { "pattern": "lijiabao.uk/lab/glimmertown-3d/play*", "zone_name": "lijiabao.uk" },
     { "pattern": "lijiabao.uk/lab/glimmertown-lab/play*", "zone_name": "lijiabao.uk" },
     { "pattern": "lijiabao.uk/defendtaipei/*", "zone_name": "lijiabao.uk" },
-    { "pattern": "lijiabao.uk/fpv/*", "zone_name": "lijiabao.uk" }
+    { "pattern": "lijiabao.uk/fpv/*", "zone_name": "lijiabao.uk" },
+    // The old games domain: redirects, the save hand-over page and unchanged files (src/old-host.js).
+    { "pattern": "game.lijiabao.uk", "custom_domain": true }
   ]
 }

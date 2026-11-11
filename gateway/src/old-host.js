@@ -1,9 +1,8 @@
 // What this Worker answers on the old games domain, game.lijiabao.uk.
 //
-// NOT ACTIVE YET. Nothing routes that domain here until the switch described in README.md
-// ("遊戲" → "舊網域的切換"). Until then GitHub Pages answers it directly.
+// Active since the switch on 2026-11-11 (README.md, "遊戲" → "舊網域的切換"): the domain is a
+// custom domain of this Worker, and GitHub Pages serves the repositories at its default address.
 //
-// After the switch:
 //   /save-export.html          hands this browser's saves to lijiabao.uk (see ../save-export.html)
 //   /<game>/…                  301 to the game's play address on lijiabao.uk
 //   /                          301 to the games area

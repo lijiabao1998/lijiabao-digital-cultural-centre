@@ -18,13 +18,13 @@ export const PAGES_ORIGIN = 'https://lijiabao1998.github.io';
  * set, the default address answers with a redirect to it; follow that one hop.
  * Set to null in the same change that routes the old domain to this Worker.
  */
-export const PAGES_FALLBACK = 'https://game.lijiabao.uk';
+export const PAGES_FALLBACK = null;
 
 /** The address the saves were made on, and the page there that hands them over. */
 export const SAVES_ORIGIN = 'https://game.lijiabao.uk';
 export const SAVES_EXPORT_PATH = '/save-export.html';
 
-/** The old games domain. Not routed to this Worker until the switch; see old-host.js. */
+/** The old games domain. This Worker answers it since the switch on 2026-11-11; see old-host.js. */
 export const OLD_HOST = 'game.lijiabao.uk';
 
 export const GAMES = [
