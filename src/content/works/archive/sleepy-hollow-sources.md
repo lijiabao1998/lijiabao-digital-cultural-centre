@@ -8,15 +8,20 @@ related: [films/a-hat-and-a-pumpkin]
 sources:
   - title: 'Washington Irving, "The Legend of Sleepy Hollow"（1820）'
     url: https://www.gutenberg.org/ebooks/41
-    note: Project Gutenberg #41，公有領域
+    note: 'Project Gutenberg #41，公有領域'
   - title: 'Jasper Francis Cropsey, Autumn - On the Hudson River, 1860'
-    note: National Gallery of Art, Washington, Gift of the Avalon Foundation（Open Access，CC0）
+    url: https://www.nga.gov/artworks/46474-autumn-hudson-river
+    note: 'National Gallery of Art, Washington, Gift of the Avalon Foundation（Open Access，CC0）'
   - title: 'John Quidor, The Headless Horseman Pursuing Ichabod Crane, 1858'
-    note: Smithsonian American Art Museum（CC0）
-  - title: 'Camille Saint-Saëns, Danse macabre, Op. 40 — The Philadelphia Orchestra, Leopold Stokowski 指揮'
-    note: 1925 年 4 月 29 日錄於 New Jersey 州 Camden，Victor 6505。數位轉檔：Internet Archive Great 78 Project
+    url: https://americanart.si.edu/collections/search/artwork/?id=34285
+    note: 'Smithsonian American Art Museum（CC0）'
+  - title: 'Camille Saint-Saëns, Danse macabre, Op. 40 — The Philadelphia Orchestra, Leopold Stokowski 指揮（Victor 6505-A）'
+    url: https://archive.org/details/78_danse-macabre-dance-of-death_philadelphia-symphony-orchestra-saint-sens-leopold_gbia0335078a
+    note: '1925 年 4 月 29 日錄於 New Jersey 州 Camden。數位轉檔：Internet Archive Great 78 Project（George Blood, L.P.）。1926 年以前在美國發行的錄音，美國公有領域'
+  - title: 'Camille Saint-Saëns, Danse macabre, Op. 40 — The Philadelphia Orchestra, Leopold Stokowski 指揮（Victor 6505-B）'
+    url: https://archive.org/details/78_danse-macabre-dance-of-death_philadelphia-symphony-orchestra-saint-sens-leopold_gbia0335078b
+    note: '同一天錄音，同一張唱片的另一面。數位轉檔：Internet Archive Great 78 Project（George Blood, L.P.）。美國公有領域'
 ---
-
 短片[《一頂帽子，一顆南瓜》](/films/a-hat-and-a-pumpkin/)沒有新寫的故事，也沒有新錄的音樂。它用的是四份已經進入公有領域的材料。
 
 | 年份 | 材料 | 作者 | 收藏與授權 |
@@ -24,6 +29,6 @@ sources:
 | 1820 | 小說〈睡谷傳奇〉（The Legend of Sleepy Hollow） | Washington Irving | Project Gutenberg #41，公有領域 |
 | 1858 | 畫作 The Headless Horseman Pursuing Ichabod Crane | John Quidor | Smithsonian American Art Museum，CC0 |
 | 1860 | 畫作 Autumn - On the Hudson River | Jasper Francis Cropsey | National Gallery of Art, Washington，Open Access（CC0） |
-| 1925 | 錄音〈骷髏之舞〉（Danse macabre, Op. 40） | Camille Saint-Saëns 作曲；The Philadelphia Orchestra，Leopold Stokowski 指揮 | Victor 6505；Internet Archive Great 78 Project 數位轉檔 |
+| 1925 | 錄音〈骷髏之舞〉（Danse macabre, Op. 40） | Camille Saint-Saëns 作曲；The Philadelphia Orchestra，Leopold Stokowski 指揮 | Victor 6505；Internet Archive Great 78 Project 數位轉檔；美國公有領域（1926 年以前發行） |
 
 故事提供情節，兩幅畫提供畫面的依據，唱片提供配樂。
