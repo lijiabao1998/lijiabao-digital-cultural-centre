@@ -6,6 +6,8 @@ date: 2026-11-04
 kind: 短片
 status: complete
 runtime: 50 秒
+cover: ../../../assets/covers/film-hangul-raised.jpg
+coverAlt: '影片封面。米白色的紙上，正中是墨黑的韓文片名「한 글자」，下方是同一句的凸起點字，右下角寫著「1926–2026」。'
 sources:
   - title: "Noto Serif KR"
     url: https://github.com/notofonts/noto-cjk
@@ -28,7 +30,6 @@ sources:
   - title: "시각장애인의 세종대왕 ‘훈맹정음’ 박두성"
     url: https://www.mindlenews.com/news/articleView.html?idxno=10112
     note: "參考。이희용，시민언론 민들레，2024 年 10 月 26 日（朴斗星的遺言）。"
-draft: true
 ---
 韓文點字叫《訓盲正音》（훈맹정음），和韓文字母原本的名字《訓民正音》只差一個字。1926 年 11 月 4 日，韓文第一次有了自己的紀念日「가갸날」，也就是後來的韓文日；同一天，朴斗星把他和學生研究了好幾年的韓文點字發表出來，讓視障者也能讀、也能寫。2026 年，韓文點字滿一百年。
 

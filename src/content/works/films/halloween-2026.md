@@ -5,6 +5,8 @@ date: 2026-10-31
 kind: 短片
 status: complete
 runtime: 45 秒
+cover: ../../../assets/covers/film-halloween-2026.jpg
+coverAlt: '影片封面。橘色底上寫著片名「在南瓜之前」和德文「Vor dem Kürbis」，右邊是一盞刻著小屋圖案、從裡面透出火光的蕪菁燈。'
 sources:
   - title: "Hop-tu-naa turnip decoration - cottage（2016）"
     url: "https://commons.wikimedia.org/wiki/File:Hop-tu-naa_turnip_decoration_-_cottage.jpg"
@@ -24,7 +26,6 @@ sources:
   - title: "Richard A. Badal, McKee Barracks 1952–1994 Crailsheim（Historische Schriftenreihe der Stadt Crailsheim, Band 17, 2018）"
     url: "https://www.stadtarchiv-crailsheim.de/publikationen/historische-schriftenreihe-der-stadt-crailsheim/"
     note: "參考。克賴爾斯海姆美軍麥基營區的背景；連結是克賴爾斯海姆市檔案館（Stadtarchiv Crailsheim）的叢書頁。"
-draft: true
 ---
 中德雙語短片，德文片名 *Vor dem Kürbis*。
 

@@ -6,6 +6,8 @@ date: 2026-10-18
 kind: 短片
 status: complete
 runtime: 52 秒
+cover: ../../../assets/covers/film-the-first-bite.jpg
+coverAlt: '影片封面。從正上方看一張鋪紅布的圓桌，五雙筷子從四面伸向中間一盤紅龜粿；上方是阿嬤戴玉鐲的手，右上角的磨石子地上有一只紅黃色風吹。左上角寫著片名「動箸」「Tāng-tī」「2026 重陽」，紅布上有一行字「阿嬤先動箸，全家才開動」。'
 sources:
   - title: "芫荽 Iansui"
     url: https://github.com/ButTaiwan/iansui
@@ -36,8 +38,8 @@ sources:
   - title: "6 small plates, manipulations"
     url: https://bigsoundbank.com/6-small-plates-manipulations-s1188.html
     note: "音效。吃飯時的碗盤聲。Joseph Sardin（BigSoundBank），CC0。"
-  - title: "台語辭典「動箸」條、「重陽節」條"
-    note: "參考。片中演出的那句規矩「大人無上桌，囡仔人袂使先動箸」，是「動箸」條的例句；台灣重陽節放風箏的習俗，見「重陽節」條。（TODO：署名方式待站主決定）"
+  - title: "《臺灣台語常用詞辭典》「動箸」條、「重陽節」條"
+    note: "參考。片中演出的那句規矩「大人無上桌，囡仔人袂使先動箸」，是「動箸」條的例句；台灣重陽節放風箏的習俗，見「重陽節」條。辭典的文字內容以創用 CC 姓名標示-禁止改作 3.0 臺灣（CC BY-ND 3.0 TW）授權。"
   - title: "WoodenRedTortoiseMouldTortoiseShell"
     url: https://commons.wikimedia.org/wiki/File:WoodenRedTortoiseMouldTortoiseShell.JPG
     note: "參考。木製粿印的照片，紅龜粿龜甲紋的參考，沒有放進畫面。P0430982，CC0。"
@@ -50,7 +52,6 @@ sources:
   - title: '利用1945年倒閉的columbia古倫美亞所錄製，鄧雨賢作曲，李臨秋作詞，純純演唱的"望春風"和"四季紅"這兩首老歌，是否要經授權？'
     url: "https://www.copyrightnote.org/ArticleContent.aspx?ID=3&aid=1649"
     note: "參考。〈四季紅〉的曲已屬公有領域、只有歌詞仍在保護期內的依據。章忠信《著作權筆記》。"
-draft: true
 ---
 阿嬤先動箸，全家才開動。
 
@@ -58,4 +59,4 @@ draft: true
 
 全家坐定，等阿嬤。最小的孫子先把筷子伸向紅龜粿，被媽媽的筷子輕輕壓住，又縮了回去。阿嬤坐下，筷尖碰了一下碗緣，全家跟著舉起筷子。她的第一筷，把一隻滷雞腿夾進最小的孫子碗裡；孫子夾一塊紅龜粿回給她，青少年也替她夾了一塊魚。
 
-孫子的筷子被壓住的那一下，演的是台語辭典「動箸」條的例句「大人無上桌，囡仔人袂使先動箸」；片中沒有寫出這句話。配樂是鄧雨賢作曲的〈四季紅〉，只用前段 8 小節的旋律；阿嬤的筷尖碰到碗緣的那一聲「叮」，就是旋律的第一個音。配樂、音效、字型與參考資料的出處，都列在下面的來源。
+孫子的筷子被壓住的那一下，演的是《臺灣台語常用詞辭典》「動箸」條的例句「大人無上桌，囡仔人袂使先動箸」；片中沒有寫出這句話。配樂是鄧雨賢作曲的〈四季紅〉，只用前段 8 小節的旋律；阿嬤的筷尖碰到碗緣的那一聲「叮」，就是旋律的第一個音。配樂、音效、字型與參考資料的出處，都列在下面的來源。

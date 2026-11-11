@@ -5,6 +5,8 @@ date: 2026-11-11
 kind: 短片
 status: complete
 runtime: 1 分 00 秒
+cover: ../../../assets/covers/film-carnival-opening-2026.jpg
+coverAlt: '影片封面。米色底上散著彩紙，左邊寫著「11:11，第五季開場」、德文「Die fünfte Jahreszeit beginnt」和 Köln · Mainz · Düsseldorf，右邊是一座指著 11 點 11 分的時鐘。'
 sources:
   - title: "Kürschner, Hoppeditz Erwachen, Düsseldorf, 11. November 2024 (5)"
     url: "https://commons.wikimedia.org/wiki/File:Hoppeditz_Erwachen,_D%C3%BCsseldorf,_11._November_2024_(5).jpg"
@@ -39,7 +41,6 @@ sources:
   - title: "Landeshauptstadt Düsseldorf, Medientermin 11.11.25: Hoppeditz-Erwachen in Düsseldorf"
     url: "https://www.duesseldorf.de/medienportal/pressedienst-einzelansicht/pld/medientermin-111125-hoppeditz-erwachen-in-duesseldorf"
     note: "參考。杜塞道夫市：Hoppeditz 甦醒。"
-draft: true
 ---
 中德雙語短片，德文片名 *Die fünfte Jahreszeit beginnt*。
 

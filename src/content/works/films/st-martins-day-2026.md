@@ -5,6 +5,8 @@ date: 2026-11-11
 kind: 短片
 status: complete
 runtime: 55 秒
+cover: ../../../assets/covers/film-st-martins-day-2026.jpg
+coverAlt: '影片封面。深灰色底上寫著「把光分給別人」和德文「Licht weitergeben」，右邊木桌上擺著兩盞貼著星星的燈籠和一個星形燈飾。'
 sources:
   - title: "Saint Martin Dividing His Cloak, Austrian, ca. 1410"
     url: "https://www.metmuseum.org/art/collection/search/471056"
@@ -31,12 +33,11 @@ sources:
     url: "https://www.unesco.de/staette/martinstradition-im-rheinland/"
     note: "參考。萊茵地區的聖馬丁傳統；這份資料記錄的是萊茵地區，不代表全德國每個地方。"
   - title: "LVR-Institut für Landeskunde und Regionalgeschichte, St. Martin light"
-    url: "https://rheinische-landeskunde.lvr.de/de/institut/institut_corona/st_martin_light/detailseite_14.html"
-    note: "參考。波恩的聖馬丁習俗與 Weckmänner 的田野記錄。"
+    url: "https://web.archive.org/web/20260608083919/https://rheinische-landeskunde.lvr.de/de/institut/institut_corona/st_martin_light/detailseite_14.html"
+    note: "參考。波恩的聖馬丁習俗與 Weckmänner 的田野記錄。原網址已失效，連結為 2026 年 6 月 8 日的網頁存檔。"
   - title: "Bistum Essen, Vom verfolgten Bischof zum populären Geschenkebringer: Die Geschichte des Heiligen Nikolaus（2024）"
     url: "https://www.bistum-essen.de/pressemenue/artikel/vom-verfolgten-bischof-zum-populaeren-geschenkebringer-die-geschichte-des-heiligen-nikolaus"
     note: "參考。其中〈Weckmann oder Stutenkerl – Martin oder Nikolaus?〉一節：人形甜麵包的地區名稱，以及和聖尼古拉節、將臨期的關聯。"
-draft: true
 ---
 中德雙語短片，德文片名 *Licht weitergeben*。
 

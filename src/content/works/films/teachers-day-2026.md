@@ -5,6 +5,8 @@ date: 2026-09-28
 kind: 短片
 status: complete
 runtime: 1 分 29 秒
+cover: ../../../assets/covers/film-teachers-day-2026.jpg
+coverAlt: '影片封面。米色紙底，左側直排寫著「教師節」「孔子誕辰二五七六週年」「二〇二六年九月二十八日」，下方朱紅印章是片名「繼其聲」；右側是《聖蹟圖》的〈杏壇禮樂〉版畫，孔子在杏壇撫琴，弟子圍立兩旁；左下寫著「Teachers’ Day · 28 September 2026」，右下角畫著一架編鐘。'
 sources:
   - title: 《聖蹟圖》（孔夫子周遊列國全圖），明萬曆十九年刊本
     url: https://id.lib.harvard.edu/curiosity/chinese-rare-books/49-990080908350203941
@@ -29,7 +31,6 @@ sources:
   - title: 《頖宮禮樂疏》文淵閣四庫全書本
     url: https://github.com/kanripo/KR2m0029
     note: 參考。核對樂譜所用的全文（Kanripo，KR2m0029）。
-draft: true
 ---
 2026 年教師節（9 月 28 日，孔子誕辰 2576 週年）的短片。
 

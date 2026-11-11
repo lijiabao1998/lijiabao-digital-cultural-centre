@@ -5,6 +5,8 @@ date: 2026-11-09
 kind: 短片
 status: complete
 runtime: 52 秒
+cover: ../../../assets/covers/film-november-9-2026.jpg
+coverAlt: '影片封面。米色底上寫著「同一天 不同的記憶」和德文「Ein Datum, viele Erinnerungen」。右邊一排四張小圖，下面標著 1848、1918、1923、1989：布魯姆的肖像、站在車頂講話的人、一頁 1923 年 11 月的日曆，以及站上柏林圍牆的人群。'
 sources:
   - title: "August Hunger, Robert Blum, um 1845–1848"
     url: "https://commons.wikimedia.org/wiki/File:Portrait_of_Robert_Blum_by_August_Hunger.jpg"
@@ -45,7 +47,6 @@ sources:
   - title: "Bundesregierung, Die Einheit ist Wirklichkeit. 3. Oktober 1990"
     url: "https://www.bundesregierung.de/breg-de/schwerpunkte/deutsche-einheit/die-einheit-ist-wirklichkeit-432814"
     note: "參考。德國聯邦政府：德國統一的日期是 1990 年 10 月 3 日。"
-draft: true
 ---
 中德雙語短片，德文片名 *Ein Datum, viele Erinnerungen*。
 

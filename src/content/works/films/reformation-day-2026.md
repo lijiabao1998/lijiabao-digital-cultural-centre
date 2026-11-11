@@ -5,6 +5,8 @@ date: 2026-10-31
 kind: 短片
 status: complete
 runtime: 1 分 08 秒
+cover: ../../../assets/covers/film-reformation-day-2026.jpg
+coverAlt: '影片封面。木桌上有一台木造印刷機、幾張印滿字的紙、羽毛筆、封蠟信、麵包和錢幣，右邊畫框裡是路德肖像；上方寫著「宗教改革日」「文字走出印刷坊」和德文 Worte verlassen die Druckwerkstatt。'
 sources:
   - title: "Martin Luther, 95 Thesen（紐倫堡：Hieronymus Höltzel 印製，1517）"
     url: "https://commons.wikimedia.org/wiki/File:Luther_95_Thesen.png"
@@ -27,7 +29,6 @@ sources:
   - title: "Wikipedia（德文）, Septembertestament"
     url: "https://de.wikipedia.org/wiki/Septembertestament"
     note: "參考。1522 年 9 月在維滕貝格出版、從希臘文翻譯、首刷約三千本。"
-draft: true
 ---
 中德雙語短片，德文片名 *Worte verlassen die Druckwerkstatt*。
 

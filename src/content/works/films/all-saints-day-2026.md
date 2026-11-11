@@ -5,6 +5,8 @@ date: 2026-11-01
 kind: 短片
 status: complete
 runtime: 32 秒
+cover: ../../../assets/covers/film-all-saints-day-2026.jpg
+coverAlt: '影片封面。米白色桌上的金色托盤放著幾支點燃的白蠟燭，旁邊立著翻到 11 月 1 日的紙曆；上方寫著「諸聖節」「一束光，照見相鄰的兩天」，還有德文 Zwei Tage des Gedenkens. Ein Licht der Erinnerung.'
 sources:
   - title: "Albrecht Dürer, Allerheiligenbild (Landauer Altar), 1511"
     url: "https://commons.wikimedia.org/wiki/File:Albrecht_D%C3%BCrer_-_Adoration_of_the_Trinity_%28Landauer_Altar%29_-_Google_Art_Project.jpg"
@@ -18,7 +20,6 @@ sources:
   - title: "Kunsthistorisches Museum Wien, Allerheiligenbild (Landauer Altar)"
     url: "https://www.khm.at/kunstwerke/allerheiligenbild-landauer-altar-615"
     note: "參考。維也納藝術史博物館的作品頁。"
-draft: true
 ---
 中德雙語短片，德文片名 *Allerheiligen*。
 
