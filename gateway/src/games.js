@@ -10,8 +10,15 @@
 // When this list changes, the routes in ../wrangler.jsonc and the `launchUrl` of the work
 // page in src/content/works/ must change with it.
 
-/** Where the repositories publish (GitHub Pages behind the owner's custom domain). */
-export const PAGES_ORIGIN = 'https://game.lijiabao.uk';
+/** Where the repositories publish: GitHub Pages, at its default address. */
+export const PAGES_ORIGIN = 'https://lijiabao1998.github.io';
+
+/**
+ * Only during the switch of the old domain. While GitHub Pages still has the custom domain
+ * set, the default address answers with a redirect to it; follow that one hop.
+ * Set to null in the same change that routes the old domain to this Worker.
+ */
+export const PAGES_FALLBACK = 'https://game.lijiabao.uk';
 
 /** The address the saves were made on, and the page there that hands them over. */
 export const SAVES_ORIGIN = 'https://game.lijiabao.uk';

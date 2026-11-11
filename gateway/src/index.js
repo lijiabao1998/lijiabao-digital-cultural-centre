@@ -13,7 +13,7 @@
 //
 // The list of games is in games.js. The work pages link here through `launchUrl`.
 
-import { GAMES, OLD_HOST, PAGES_ORIGIN, SAVES_ORIGIN } from './games.js';
+import { GAMES, OLD_HOST, PAGES_FALLBACK, PAGES_ORIGIN, SAVES_ORIGIN } from './games.js';
 import { oldHost } from './old-host.js';
 import { savesPage } from './saves-page.js';
 
@@ -100,7 +100,8 @@ function redirect(location, status, extra = {}) {
 
 /** Stream a file of the game from where its repository publishes it. */
 async function proxy(request, url, game, rest, base) {
-  const target = `${PAGES_ORIGIN}/${game.repo}/${rest}${url.search}`;
+  const path = `/${game.repo}/${rest}${url.search}`;
+  const target = PAGES_ORIGIN + path;
   const headers = new Headers();
   for (const name of FORWARDED) {
     const value = request.headers.get(name);
@@ -110,6 +111,9 @@ async function proxy(request, url, game, rest, base) {
   let upstream;
   try {
     upstream = await fetch(target, { method: request.method, headers, redirect: 'manual' });
+    if (forwardsToFallback(upstream)) {
+      upstream = await fetch(PAGES_FALLBACK + path, { method: request.method, headers, redirect: 'manual' });
+    }
   } catch {
     return new Response('The game could not be reached. Please try again in a moment.', {
       status: 502,
@@ -123,6 +127,13 @@ async function proxy(request, url, game, rest, base) {
   const location = upstream.headers.get('location');
   if (location) response.headers.set('location', mapLocation(location, target, game, base));
   return response;
+}
+
+/** GitHub Pages pointing at the custom domain it still has (see PAGES_FALLBACK). */
+function forwardsToFallback(response) {
+  if (!PAGES_FALLBACK || response.status < 300 || response.status >= 400) return false;
+  const location = response.headers.get('location') || '';
+  return location.replace(/^http:/, 'https:').startsWith(PAGES_FALLBACK + '/');
 }
 
 function mapLocation(location, target, game, base) {
