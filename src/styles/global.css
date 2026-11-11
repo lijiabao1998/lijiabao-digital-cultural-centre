@@ -15,7 +15,7 @@
   --violet: #5b3fb5;
 
   --font-sans:
-    var(--font-latin), var(--font-tc-a), var(--font-tc-b), 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei',
+    var(--font-latin), var(--font-tc), 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei',
     'Heiti TC', system-ui, sans-serif;
 
   --wrap: 1360px;

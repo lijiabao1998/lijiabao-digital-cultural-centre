@@ -4,7 +4,11 @@ import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import { SITE } from '@data/site';
 import { graph } from '@lib/schema';
+import { cjkChunks, cjkFontVar } from '@lib/cjk-glyphs.mjs';
 import '../styles/global.css';
+
+// One small Noto Sans TC file per piece of the glyph list (see src/lib/cjk-glyphs.mjs).
+const cjkVars = cjkChunks().map((_, i) => cjkFontVar(i));
 
 interface Props {
   /** Page title without the site name. Omit on the home page. */
@@ -76,8 +80,8 @@ const jsonLd = JSON.stringify(graph(...schema)).replace(/</g, '\\u003c');
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
     <Font cssVariable="--font-latin" preload />
-    <Font cssVariable="--font-tc-a" preload />
-    <Font cssVariable="--font-tc-b" preload />
+    {cjkVars.map((v) => <Font cssVariable={v as any} preload />)}
+    <style is:inline set:html={`:root{--font-tc:${cjkVars.map((v) => `var(${v})`).join(',')}}`} />
 
     <script type="application/ld+json" set:html={jsonLd} />
   </head>

@@ -4,6 +4,7 @@
 //   3. every URL in sitemap.xml has a page, and every page is in sitemap.xml
 //   4. every page has a title, a description, a canonical URL and valid JSON-LD
 //   5. every game that is played on this domain is known to the gateway (gateway/), and the other way round
+//   6. pages load the small CJK font subset, not the whole family
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -80,6 +81,10 @@ for (const file of html) {
     fail(`${page}: no canonical`);
   }
   if (!/<html lang="zh-Hant"/.test(src)) fail(`${page}: no lang`);
+  // Fonts: a handful of subset files. Dozens of @font-face rules mean the glyph subset request
+  // failed and the build fell back to the whole CJK family (see src/lib/cjk-glyphs.mjs).
+  const faces = (src.match(/@font-face/g) || []).length;
+  if (faces > 12) fail(`${page}: ${faces} @font-face rules; the CJK glyph subset did not apply`);
 
   for (const m of src.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
     try {
