@@ -1,0 +1,209 @@
+---
+// One page per post.
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '@layouts/Base.astro';
+import Arrow from '@components/Arrow.astro';
+import { BLOG, SITE } from '@data/site';
+import { getPosts, postMdPath, postPath, postSlug, postUrl, type Post } from '@lib/blog';
+import { breadcrumbs } from '@lib/schema';
+import { formatDate, isoDay } from '@lib/works';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  // Newest first: the newer post is the one before, the older one the one after.
+  return posts.map((post, i) => ({
+    params: { slug: postSlug(post) },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+const { post, newer, older } = Astro.props;
+const d = post.data;
+const { Content } = await render(post);
+
+const schema = [
+  breadcrumbs([
+    { name: '首頁', path: '/' },
+    { name: BLOG.name, path: BLOG.path },
+    { name: d.title, path: postPath(post) },
+  ]),
+  {
+    '@type': 'BlogPosting',
+    '@id': `${postUrl(post)}#post`,
+    headline: d.title,
+    description: d.summary,
+    url: postUrl(post),
+    mainEntityOfPage: postUrl(post),
+    datePublished: isoDay(d.date),
+    dateModified: isoDay(d.updated ?? d.date),
+    inLanguage: SITE.locale,
+    ...(d.tags.length ? { keywords: d.tags.join(', ') } : {}),
+    ...(d.cover ? { image: new URL(d.cover.src, SITE.url).href } : {}),
+    author: { '@type': 'Person', name: SITE.founder },
+    publisher: { '@id': `${SITE.url}/#organization` },
+    isPartOf: { '@id': `${SITE.url}${BLOG.path}#blog` },
+  },
+];
+---
+
+<Base
+  title={d.title}
+  description={d.summary}
+  image={d.cover?.src}
+  imageAlt={d.coverAlt}
+  markdown={postMdPath(post)}
+  schema={schema}
+  ogType="article"
+>
+  <article>
+    <header class="wrap page-head">
+      <ol class="crumbs" aria-label="目前位置">
+        <li><a href="/">首頁</a></li>
+        <li><a href={BLOG.path}>{BLOG.name}</a></li>
+        <li aria-current="page">{d.title}</li>
+      </ol>
+      <p class="meta">
+        <time datetime={isoDay(d.date)}>{formatDate(d.date)}</time>
+        {d.updated && <span>・更新於 {formatDate(d.updated)}</span>}
+      </p>
+      <h1>{d.title}</h1>
+      <p class="lead">{d.summary}</p>
+      {
+        d.tags.length > 0 && (
+          <ul class="tags" aria-label="主題">
+            {d.tags.map((t) => (
+              <li class="chip">{t}</li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    {
+      d.cover && (
+        <div class="wrap cover">
+          <Image
+            src={d.cover}
+            alt={d.coverAlt ?? ''}
+            widths={[640, 960, 1280, 1600]}
+            sizes="(max-width: 1200px) 100vw, 1200px"
+            loading="eager"
+          />
+        </div>
+      )
+    }
+
+    <div class="wrap body">
+      <div class="prose">
+        <Content />
+      </div>
+      <p class="md">
+        <a class="arrow-link" href={postMdPath(post)}>這篇文章的 Markdown 版本 <Arrow /></a>
+      </p>
+    </div>
+  </article>
+
+  <nav class="wrap more" aria-label="其他文章">
+    {
+      older && (
+        <a class="more__link" href={postPath(older)}>
+          <span>上一篇</span>
+          <strong>{older.data.title}</strong>
+        </a>
+      )
+    }
+    {
+      newer && (
+        <a class="more__link more__link--next" href={postPath(newer)}>
+          <span>下一篇</span>
+          <strong>{newer.data.title}</strong>
+        </a>
+      )
+    }
+    <a class="arrow-link more__all" href={BLOG.path}>全部文章 <Arrow /></a>
+  </nav>
+</Base>
+
+<style>
+  .meta {
+    margin-bottom: 14px;
+    font-size: 0.9375rem;
+    font-weight: 800;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+  }
+  .cover {
+    margin-bottom: clamp(28px, 4vw, 56px);
+  }
+  .cover :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .body {
+    padding-bottom: clamp(40px, 6vw, 88px);
+  }
+  .body .prose {
+    max-width: 44em;
+    font-size: 1.125rem;
+    line-height: 1.9;
+  }
+  .md {
+    margin-top: clamp(28px, 4vw, 48px);
+  }
+  .more {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 clamp(24px, 5vw, 80px);
+    padding-block: clamp(28px, 3.6vw, 48px) var(--section);
+    border-top: 3px solid var(--ink);
+  }
+  .more__link {
+    display: grid;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .more__link span {
+    font-size: 0.9375rem;
+    font-weight: 800;
+  }
+  .more__link strong {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    line-height: 1.35;
+  }
+  .more__link:hover strong {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+  }
+  .more__link--next {
+    grid-column: 2;
+    text-align: right;
+  }
+  .more__all {
+    grid-column: 1 / -1;
+    margin-top: clamp(24px, 3vw, 40px);
+  }
+  @media (max-width: 760px) {
+    .more {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .more__link--next {
+      grid-column: 1;
+      text-align: left;
+    }
+  }
+</style>

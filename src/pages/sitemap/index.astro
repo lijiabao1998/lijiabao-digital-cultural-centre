@@ -1,13 +1,14 @@
 ---
 // 網站地圖: the human-readable version of sitemap.xml, generated from the same list.
 import Base from '@layouts/Base.astro';
-import { AREAS, SITE } from '@data/site';
+import { AREAS, BLOG, SITE } from '@data/site';
 import { getPages } from '@lib/pages';
 import { breadcrumbs } from '@lib/schema';
 import { isoDay } from '@lib/works';
 
 const pages = await getPages();
 const centre = pages.filter((p) => p.group === 'centre');
+const posts = pages.filter((p) => p.group === 'blog');
 const groups = AREAS.map((area) => ({
   area,
   index: pages.find((p) => p.path === `/${area.id}/`)!,
@@ -60,6 +61,30 @@ const schema = [
         }
       </ul>
     </section>
+
+    {
+      posts.length > 0 && (
+        <section>
+          <h2>
+            <a href={BLOG.path}>{BLOG.name}</a>
+            <a class="md" href="/blog.md">
+              .md
+            </a>
+          </h2>
+          <ul>
+            {posts.map((p) => (
+              <li>
+                <a href={p.path}>{p.title}</a>
+                <a class="md" href={p.md}>
+                  .md
+                </a>
+                <time datetime={isoDay(p.lastmod)}>{isoDay(p.lastmod)}</time>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     {
       groups.map(({ area, index, list }) => (

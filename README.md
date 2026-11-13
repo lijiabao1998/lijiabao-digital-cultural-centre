@@ -91,6 +91,29 @@ linkLabel: 前往作品          # 選填
 選填的補充內文。
 ```
 
+## 新增一篇文章
+
+文章在 `/blog/`，一篇一個網址。在 `src/content/blog/` 新增一個檔案，檔名是 `日期-網址.md`，例如 `2026-11-20-first-montage.md`，網址就是 `lijiabao.uk/blog/first-montage/`。檔名裡的網址部分只能用小寫英文、數字與連字號。
+
+```markdown
+---
+title: 文章標題
+summary: 一到兩句的摘要。列表、搜尋結果與分享卡片都用這一段。
+date: 2026-11-20
+tags: [蒙太奇]            # 可以不填：系列或主題
+cover: ../../assets/blog/first-montage.jpg   # 可以不填：文章開頭的大圖，也是分享圖
+coverAlt: 圖片在畫什麼     # 有 cover 就寫
+updated: 2026-11-25       # 可以不填：改過內容時寫
+draft: true               # 可以不填：寫 true 就不會上線
+---
+
+內文用 Markdown 寫。
+```
+
+第一篇文章上線之前，`/blog/` 是一個不進搜尋的空頁，導覽列、頁尾、sitemap 和 `llms.txt` 都不會出現「文章」。第一篇推上去之後，這些會自動出現。
+
+顯示的名稱「文章」和列表頁那一句介紹，在 `src/data/site.ts` 的 `BLOG`。
+
 ## 自動產生的東西
 
 新增作品之後不需要另外維護下面這些，建置時會一起更新：
@@ -108,6 +131,7 @@ linkLabel: 前往作品          # 選填
 src/
   content/works/<展區>/<slug>.md   作品
   content/news/                    最新動態
+  content/blog/                    文章（/blog/）
   content.config.ts                內容欄位定義
   data/site.ts                     站名、四個展區、狀態、導覽
   data/about.ts                    「關於我們」的文字

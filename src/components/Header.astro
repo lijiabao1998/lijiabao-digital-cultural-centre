@@ -8,10 +8,17 @@
 // when focus leaves; plus the mobile menu button.
 import Logo from './Logo.astro';
 import Arrow from './Arrow.astro';
-import { AREAS, UTILITY_NAV } from '@data/site';
+import { AREAS, BLOG, UTILITY_NAV } from '@data/site';
+import { getPosts } from '@lib/blog';
 import { areaOf, getWorks, workPath } from '@lib/works';
 
 const MAX_LINKS = 6;
+
+// 文章 joins the utility links once there is a post to read.
+const utility = [
+  ...((await getPosts()).length ? [{ href: BLOG.path, label: BLOG.name }] : []),
+  ...UTILITY_NAV,
+];
 const works = await getWorks();
 const path = Astro.url.pathname;
 
@@ -28,7 +35,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
       <p class="bar__tag">An independent digital cultural centre</p>
       <ul class="bar__links">
         {
-          UTILITY_NAV.map((l) => (
+          utility.map((l) => (
             <li>
               <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>
                 {l.label}
@@ -93,7 +100,7 @@ const isCurrent = (href: string) => path === href || path.startsWith(href);
 
       <ul class="nav__utility">
         {
-          UTILITY_NAV.map((l) => (
+          utility.map((l) => (
             <li>
               <a href={l.href}>{l.label}</a>
             </li>

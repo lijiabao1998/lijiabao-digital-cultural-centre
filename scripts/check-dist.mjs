@@ -73,11 +73,13 @@ for (const file of html) {
   const page = rel(file);
   const src = readFileSync(file, 'utf8');
   const urlPath = page.replace(/index\.html$/, '').replace(/\.html$/, '');
-  if (page !== '/404.html') pagePaths.add(urlPath);
+  // Pages kept out of search (404, the blog index before its first post) are not expected in the sitemap.
+  const noindex = /<meta name="robots" content="noindex/.test(src);
+  if (!noindex) pagePaths.add(urlPath);
 
   if (!/<title>[^<]+<\/title>/.test(src)) fail(`${page}: no <title>`);
   if (!/<meta name="description" content="[^"]+"/.test(src)) fail(`${page}: no meta description`);
-  if (page !== '/404.html' && !/<link rel="canonical" href="https:\/\/lijiabao\.uk\//.test(src)) {
+  if (!noindex && !/<link rel="canonical" href="https:\/\/lijiabao\.uk\//.test(src)) {
     fail(`${page}: no canonical`);
   }
   if (!/<html lang="zh-Hant"/.test(src)) fail(`${page}: no lang`);

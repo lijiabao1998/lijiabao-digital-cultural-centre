@@ -2,6 +2,7 @@
 //
 //   works  src/content/works/<area>/<slug>.md   one file per work; the folder is the area (films | games | archive | lab)
 //   news   src/content/news/<yyyy-mm-dd>-<slug>.md   最新動態
+//   blog   src/content/blog/<yyyy-mm-dd>-<slug>.md   文章；網址是 /blog/<slug>/（檔名去掉日期）
 //
 // Schemas are strict: an unknown or misspelled field fails the build instead of being silently ignored.
 // How to add a work: see README.md.
@@ -69,4 +70,22 @@ const news = defineCollection({
   }),
 });
 
-export const collections = { works, news };
+const blog = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/blog' }),
+  schema: ({ image }) =>
+    z.strictObject({
+      title: z.string().trim().min(1),
+      /** 摘要：一到兩句，列表、搜尋結果、分享卡片與 llms.txt 都用這一段 */
+      summary: z.string().trim().min(1),
+      date: z.date(),
+      updated: z.date().optional(),
+      cover: image().optional(),
+      coverAlt: z.string().trim().min(1).optional(),
+      /** 系列或主題，例如「蒙太奇」。可以不填 */
+      tags: z.array(z.string().trim().min(1)).default([]),
+      /** 草稿不會產生頁面，也不會出現在 sitemap、feed、llms.txt */
+      draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = { works, news, blog };

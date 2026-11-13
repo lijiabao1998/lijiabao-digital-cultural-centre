@@ -2,6 +2,7 @@
 import type { APIRoute } from 'astro';
 import { SITE, areaById } from '@data/site';
 import { absUrl } from '@lib/pages';
+import { getPosts, postUrl } from '@lib/blog';
 import { areaOf, getNews, getWorks, workUrl } from '@lib/works';
 
 const esc = (s: string) =>
@@ -10,6 +11,7 @@ const esc = (s: string) =>
 export const GET: APIRoute = async () => {
   const works = await getWorks();
   const news = await getNews();
+  const posts = await getPosts();
   const entries = [
     ...works.map((w) => ({
       id: workUrl(w),
@@ -19,6 +21,15 @@ export const GET: APIRoute = async () => {
       date: w.data.updated ?? w.data.date,
       published: w.data.date,
       category: areaById(areaOf(w)).nameEn,
+    })),
+    ...posts.map((p) => ({
+      id: postUrl(p),
+      url: postUrl(p),
+      title: `文章｜${p.data.title}`,
+      summary: p.data.summary,
+      date: p.data.updated ?? p.data.date,
+      published: p.data.date,
+      category: 'Blog',
     })),
     ...news.map((n) => ({
       id: absUrl(`/news/#${n.id}`),

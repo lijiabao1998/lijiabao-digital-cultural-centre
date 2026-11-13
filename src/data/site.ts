@@ -90,6 +90,14 @@ export const STATUS = {
 } as const;
 export type StatusId = keyof typeof STATUS;
 
+/** 文章（/blog/）. Shown in the navigation once the first post is published. */
+export const BLOG = {
+  path: '/blog/',
+  name: '文章',
+  nameEn: 'Blog',
+  intro: '本中心定期發表的文章。',
+} as const;
+
 /** Secondary links in the top-right of the header and in the footer. */
 export const UTILITY_NAV = [
   { href: '/news/', label: '最新動態' },

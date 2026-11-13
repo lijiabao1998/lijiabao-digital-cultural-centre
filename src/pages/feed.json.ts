@@ -1,13 +1,15 @@
 // /feed.json — JSON Feed 1.1 of works and news, newest first.
 import type { APIRoute } from 'astro';
 import { SITE, areaById } from '@data/site';
-import { workMarkdown } from '@lib/markdown';
+import { postMarkdown, workMarkdown } from '@lib/markdown';
 import { absUrl } from '@lib/pages';
+import { getPosts, postUrl } from '@lib/blog';
 import { areaOf, getNews, getWorks, workUrl } from '@lib/works';
 
 export const GET: APIRoute = async () => {
   const works = await getWorks();
   const news = await getNews();
+  const posts = await getPosts();
   const items = [
     ...works.map((w) => ({
       id: workUrl(w),
@@ -19,6 +21,17 @@ export const GET: APIRoute = async () => {
       date_modified: (w.data.updated ?? w.data.date).toISOString(),
       tags: [areaById(areaOf(w)).name, areaById(areaOf(w)).nameEn, w.data.kind],
       ...(w.data.cover ? { image: absUrl(w.data.cover.src) } : {}),
+    })),
+    ...posts.map((p) => ({
+      id: postUrl(p),
+      url: postUrl(p),
+      title: p.data.title,
+      summary: p.data.summary,
+      content_text: postMarkdown(p),
+      date_published: p.data.date.toISOString(),
+      date_modified: (p.data.updated ?? p.data.date).toISOString(),
+      tags: ['文章', 'Blog', ...p.data.tags],
+      ...(p.data.cover ? { image: absUrl(p.data.cover.src) } : {}),
     })),
     ...news.map((n) => ({
       id: absUrl(`/news/#${n.id}`),

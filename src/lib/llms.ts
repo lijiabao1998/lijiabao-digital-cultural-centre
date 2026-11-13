@@ -1,8 +1,9 @@
 // Builders for /llms.txt, /llms-full.txt and the Markdown twins of the non-work pages.
 // Format of llms.txt: https://llmstxt.org/ (H1, blockquote summary, notes, then H2 sections of links).
 import { ABOUT_SECTIONS, STATUS_LEGEND } from '@data/about';
-import { AREAS, SITE, STATUS } from '@data/site';
-import { areaMarkdown, newsMarkdown, workLine, workMarkdown } from './markdown';
+import { AREAS, BLOG, SITE, STATUS } from '@data/site';
+import { areaMarkdown, blogMarkdown, newsMarkdown, postLine, postMarkdown, workLine, workMarkdown } from './markdown';
+import { getPosts } from './blog';
 import { absUrl } from './pages';
 import { areaOf, getNews, getWorks } from './works';
 
@@ -42,6 +43,13 @@ export async function llmsTxt(): Promise<string> {
     out.push(`## ${area.name} ${area.nameEn}`, '', `${area.intro} ${area.introEn}`, '');
     out.push(`- [${area.name}展區總覽 (${area.nameEn} overview)](${absUrl(`/${area.id}.md`)}): ${list.length} 件作品`);
     out.push(...list.map(workLine), '');
+  }
+
+  const posts = await getPosts();
+  if (posts.length) {
+    out.push(`## ${BLOG.name} ${BLOG.nameEn}`, '', `${BLOG.intro} Articles published by the centre, newest first.`, '');
+    out.push(`- [${BLOG.name}總覽 (${BLOG.nameEn} index)](${absUrl('/blog.md')}): ${posts.length} 篇`);
+    out.push(...posts.map(postLine), '');
   }
 
   out.push(
@@ -140,6 +148,8 @@ export async function llmsFullTxt(): Promise<string> {
     const list = works.filter((w) => areaOf(w) === area.id);
     parts.push(areaMarkdown(area.id, list), ...list.map(workMarkdown));
   }
+  const posts = await getPosts();
+  if (posts.length) parts.push(blogMarkdown(posts), ...posts.map(postMarkdown));
   parts.push(newsMarkdown(news));
   return parts.map((p) => p.trim()).join(sep) + '\n';
 }

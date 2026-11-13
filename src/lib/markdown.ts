@@ -1,6 +1,7 @@
 // Markdown twins: every page that matters has a plain Markdown version at the same address plus `.md`.
 // These are what /llms.txt links to, and what /llms-full.txt concatenates.
-import { AREAS, SITE, STATUS, areaById } from '@data/site';
+import { AREAS, BLOG, SITE, STATUS, areaById } from '@data/site';
+import { postMdPath, postUrl, type Post } from './blog';
 import { areaOf, formatDate, isoDay, workMdPath, workUrl, type NewsItem, type Work } from './works';
 
 const abs = (path: string) => new URL(path, SITE.url).href;
@@ -94,5 +95,38 @@ export function newsMarkdown(items: NewsItem[]): string {
       ...(n.data.link ? ['', `相關連結：<${abs(n.data.link)}>`] : []),
       '',
     ]),
+  ].join('\n');
+}
+
+/** One post as a self-contained Markdown document. */
+export function postMarkdown(p: Post): string {
+  const d = p.data;
+  return [
+    `# ${d.title}`,
+    '',
+    `> ${d.summary}`,
+    '',
+    `- 發表：${formatDate(d.date)}（${isoDay(d.date)}）`,
+    ...(d.updated ? [`- 最後更新：${formatDate(d.updated)}（${isoDay(d.updated)}）`] : []),
+    ...(d.tags.length ? [`- 主題：${d.tags.join('、')}`] : []),
+    `- 網址：<${postUrl(p)}>`,
+    `- 出處：${SITE.name}（${SITE.nameEn}）`,
+    ...(p.body?.trim() ? ['', p.body.trim()] : []),
+    '',
+  ].join('\n');
+}
+
+export const postLine = (p: Post): string =>
+  `- [${p.data.title}](${abs(postMdPath(p))}): ${isoDay(p.data.date)}｜${p.data.summary}`;
+
+/** The list of posts, as Markdown. */
+export function blogMarkdown(posts: Post[]): string {
+  return [
+    `# ${BLOG.name}（${BLOG.nameEn}）`,
+    '',
+    `> ${BLOG.intro}網址：<${abs(BLOG.path)}>`,
+    '',
+    ...(posts.length ? posts.map(postLine) : ['目前還沒有文章。']),
+    '',
   ].join('\n');
 }
