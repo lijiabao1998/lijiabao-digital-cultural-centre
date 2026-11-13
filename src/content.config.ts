@@ -81,6 +81,8 @@ const blog = defineCollection({
       updated: z.date().optional(),
       cover: image().optional(),
       coverAlt: z.string().trim().min(1).optional(),
+      /** 署名：誰寫的。不填就是站主。由 AI 撰寫的文章一定要在這裡寫明 */
+      byline: z.string().trim().min(1).optional(),
       /** 系列或主題，例如「蒙太奇」。可以不填 */
       tags: z.array(z.string().trim().min(1)).default([]),
       /** 草稿不會產生頁面，也不會出現在 sitemap、feed、llms.txt */

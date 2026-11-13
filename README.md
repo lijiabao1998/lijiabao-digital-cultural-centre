@@ -93,7 +93,7 @@ linkLabel: 前往作品          # 選填
 
 ## 新增一篇文章
 
-文章在 `/blog/`，一篇一個網址。在 `src/content/blog/` 新增一個檔案，檔名是 `日期-網址.md`，例如 `2026-11-20-first-montage.md`，網址就是 `lijiabao.uk/blog/first-montage/`。檔名裡的網址部分只能用小寫英文、數字與連字號。
+專區在網站上叫「觀點分享」，底層是一般的 blog：網址 `/blog/`，一篇一個網址。在 `src/content/blog/` 新增一個檔案，檔名是 `日期-網址.md`，例如 `2026-11-20-first-montage.md`，網址就是 `lijiabao.uk/blog/first-montage/`。檔名裡的網址部分只能用小寫英文、數字與連字號。
 
 ```markdown
 ---
@@ -101,6 +101,7 @@ title: 文章標題
 summary: 一到兩句的摘要。列表、搜尋結果與分享卡片都用這一段。
 date: 2026-11-20
 tags: [蒙太奇]            # 可以不填：系列或主題
+byline: 撰文：某某       # 可以不填：不是站主寫的就寫明是誰
 cover: ../../assets/blog/first-montage.jpg   # 可以不填：文章開頭的大圖，也是分享圖
 coverAlt: 圖片在畫什麼     # 有 cover 就寫
 updated: 2026-11-25       # 可以不填：改過內容時寫
@@ -110,9 +111,13 @@ draft: true               # 可以不填：寫 true 就不會上線
 內文用 Markdown 寫。
 ```
 
-第一篇文章上線之前，`/blog/` 是一個不進搜尋的空頁，導覽列、頁尾、sitemap 和 `llms.txt` 都不會出現「文章」。第一篇推上去之後，這些會自動出現。
+專區裡沒有任何已公開的文章時，`/blog/` 是一個不進搜尋的空頁，導覽列、頁尾、sitemap 和 `llms.txt` 都不會出現「觀點分享」；有文章之後這些會自動出現。第一篇在 2026-11-13 上線。
 
-顯示的名稱「文章」和列表頁那一句介紹，在 `src/data/site.ts` 的 `BLOG`。
+顯示的名稱「觀點分享」和列表頁那一句介紹，在 `src/data/site.ts` 的 `BLOG`。
+
+內文用讀者電腦上的中文字體顯示，只有標題、摘要與標籤用全站的網頁字型，所以文章再長也不會讓其他頁面變重。配圖放在 `src/assets/blog/`，在內文裡用 `![說明](../../assets/blog/檔名.png)` 引用。
+
+由 AI 撰寫的文章要在開頭的 `byline` 寫明，例如 `byline: 撰文：Claude（Anthropic 的 AI 模型）`；頁面會顯示這一行，結構化資料的作者則是本中心。
 
 ## 自動產生的東西
 

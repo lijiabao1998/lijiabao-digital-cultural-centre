@@ -1,6 +1,6 @@
 // /feed.json — JSON Feed 1.1 of works and news, newest first.
 import type { APIRoute } from 'astro';
-import { SITE, areaById } from '@data/site';
+import { BLOG, SITE, areaById } from '@data/site';
 import { postMarkdown, workMarkdown } from '@lib/markdown';
 import { absUrl } from '@lib/pages';
 import { getPosts, postUrl } from '@lib/blog';
@@ -30,7 +30,7 @@ export const GET: APIRoute = async () => {
       content_text: postMarkdown(p),
       date_published: p.data.date.toISOString(),
       date_modified: (p.data.updated ?? p.data.date).toISOString(),
-      tags: ['文章', 'Blog', ...p.data.tags],
+      tags: [BLOG.name, BLOG.nameEn, ...p.data.tags],
       ...(p.data.cover ? { image: absUrl(p.data.cover.src) } : {}),
     })),
     ...news.map((n) => ({

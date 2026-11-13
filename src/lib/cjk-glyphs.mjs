@@ -10,7 +10,12 @@
 // So the list is cut into as many pieces as it takes to keep every request short, and
 // scripts/check-dist.mjs fails the build if a page ever carries the full family again.
 //
-// Used by astro.config.mjs (which fonts to fetch) and src/layouts/Base.astro (which to load).
+// Blog posts are the exception: their bodies are set in the reader's system font and only their
+// front matter counts here, so publishing long articles does not make every page heavier.
+//
+// Used by astro.config.mjs only (which fonts to fetch). src/layouts/Base.astro gets the number of
+// pieces from there as `__CJK_FONT_COUNT__`; it must not import this file, because after bundling
+// `SRC` below would point somewhere else and the two counts would disagree.
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -26,7 +31,11 @@ function collect(dir) {
       const p = `${d}/${e.name}`;
       if (e.isDirectory()) walk(p);
       else if (/\.(astro|ts|mjs|md|mdx|json|css)$/.test(e.name)) {
-        for (const ch of readFileSync(p, 'utf8')) {
+        let text = readFileSync(p, 'utf8');
+        // Long-form posts: only the front matter (title, summary, tags) is set in the web font.
+        // The body is rendered in the reader's system font, so it must not grow this list.
+        if (/[\\/]content[\\/]blog[\\/]/.test(p)) text = (text.match(/^---\r?\n[\s\S]*?\r?\n---/) || [''])[0];
+        for (const ch of text) {
           const cp = ch.codePointAt(0) ?? 0;
           if (cp >= 0x2e80 && !/\s/u.test(ch)) out.add(ch);
         }

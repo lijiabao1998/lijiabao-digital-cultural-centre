@@ -90,12 +90,15 @@ export const STATUS = {
 } as const;
 export type StatusId = keyof typeof STATUS;
 
-/** 文章（/blog/）. Shown in the navigation once the first post is published. */
+/**
+ * 觀點分享 is the name readers see; underneath it is an ordinary blog (route /blog/, collection `blog`).
+ * It joins the navigation, the sitemap and llms.txt once the first post is published.
+ */
 export const BLOG = {
   path: '/blog/',
-  name: '文章',
+  name: '觀點分享',
   nameEn: 'Blog',
-  intro: '本中心定期發表的文章。',
+  intro: '本中心定期發表的觀點與長文。',
 } as const;
 
 /** Secondary links in the top-right of the header and in the footer. */

@@ -4,11 +4,12 @@ import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import { SITE } from '@data/site';
 import { graph } from '@lib/schema';
-import { cjkChunks, cjkFontVar } from '@lib/cjk-glyphs.mjs';
 import '../styles/global.css';
 
 // One small Noto Sans TC file per piece of the glyph list (see src/lib/cjk-glyphs.mjs).
-const cjkVars = cjkChunks().map((_, i) => cjkFontVar(i));
+// The number of pieces is decided once, in astro.config.mjs, and handed over as a constant.
+declare const __CJK_FONT_COUNT__: number;
+const cjkVars = Array.from({ length: __CJK_FONT_COUNT__ }, (_, i) => `--font-tc-${i}`);
 
 interface Props {
   /** Page title without the site name. Omit on the home page. */

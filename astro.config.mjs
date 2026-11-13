@@ -37,5 +37,10 @@ export default defineConfig({
     },
     ...cjkFonts.map((glyphs, i) => notoTc(cjkFontVar(i), glyphs)),
   ],
-  vite: { cacheDir: './.cache/vite' },
+  vite: {
+    cacheDir: './.cache/vite',
+    // The layout loads exactly the pieces configured above. It must not count them again:
+    // once bundled, cjk-glyphs.mjs no longer sits next to the source files it reads.
+    define: { __CJK_FONT_COUNT__: JSON.stringify(cjkFonts.length) },
+  },
 });

@@ -108,6 +108,7 @@ export function postMarkdown(p: Post): string {
     '',
     `- 發表：${formatDate(d.date)}（${isoDay(d.date)}）`,
     ...(d.updated ? [`- 最後更新：${formatDate(d.updated)}（${isoDay(d.updated)}）`] : []),
+    ...(d.byline ? [`- 署名：${d.byline}`] : []),
     ...(d.tags.length ? [`- 主題：${d.tags.join('、')}`] : []),
     `- 網址：<${postUrl(p)}>`,
     `- 出處：${SITE.name}（${SITE.nameEn}）`,

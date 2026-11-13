@@ -1,6 +1,6 @@
 // /feed.xml — Atom feed of works and news, newest first.
 import type { APIRoute } from 'astro';
-import { SITE, areaById } from '@data/site';
+import { BLOG, SITE, areaById } from '@data/site';
 import { absUrl } from '@lib/pages';
 import { getPosts, postUrl } from '@lib/blog';
 import { areaOf, getNews, getWorks, workUrl } from '@lib/works';
@@ -25,7 +25,7 @@ export const GET: APIRoute = async () => {
     ...posts.map((p) => ({
       id: postUrl(p),
       url: postUrl(p),
-      title: `文章｜${p.data.title}`,
+      title: `${BLOG.name}｜${p.data.title}`,
       summary: p.data.summary,
       date: p.data.updated ?? p.data.date,
       published: p.data.date,

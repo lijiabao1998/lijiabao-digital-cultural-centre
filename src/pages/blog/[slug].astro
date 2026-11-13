@@ -45,7 +45,9 @@ const schema = [
     inLanguage: SITE.locale,
     ...(d.tags.length ? { keywords: d.tags.join(', ') } : {}),
     ...(d.cover ? { image: new URL(d.cover.src, SITE.url).href } : {}),
-    author: { '@type': 'Person', name: SITE.founder },
+    // A stated byline means the founder did not write it: the centre is then the responsible author.
+    author: d.byline ? { '@id': `${SITE.url}/#organization` } : { '@type': 'Person', name: SITE.founder },
+    ...(d.byline ? { creditText: d.byline } : {}),
     publisher: { '@id': `${SITE.url}/#organization` },
     isPartOf: { '@id': `${SITE.url}${BLOG.path}#blog` },
   },
@@ -72,6 +74,7 @@ const schema = [
         <time datetime={isoDay(d.date)}>{formatDate(d.date)}</time>
         {d.updated && <span>・更新於 {formatDate(d.updated)}</span>}
       </p>
+      {d.byline && <p class="byline">{d.byline}</p>}
       <h1>{d.title}</h1>
       <p class="lead">{d.summary}</p>
       {
@@ -136,6 +139,11 @@ const schema = [
     font-size: 0.9375rem;
     font-weight: 800;
   }
+  .byline {
+    margin-bottom: 14px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
   .tags {
     display: flex;
     flex-wrap: wrap;
@@ -155,10 +163,23 @@ const schema = [
   .body {
     padding-bottom: clamp(40px, 6vw, 88px);
   }
+  /* The body uses the reader's own CJK font. The site-wide web font only carries the characters
+     of titles, summaries and the interface (see src/lib/cjk-glyphs.mjs). */
   .body .prose {
     max-width: 44em;
+    font-family: var(--font-latin), 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', 'Noto Sans CJK TC', sans-serif;
     font-size: 1.125rem;
     line-height: 1.9;
+  }
+  .body .prose :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-block: 1.6em 0.6em;
+    border: 1px solid var(--ink);
+  }
+  .body .prose :global(table) {
+    font-size: 0.9375rem;
   }
   .md {
     margin-top: clamp(28px, 4vw, 48px);
