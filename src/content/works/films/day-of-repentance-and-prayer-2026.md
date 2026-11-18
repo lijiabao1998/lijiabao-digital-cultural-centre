@@ -5,6 +5,8 @@ date: 2026-11-18
 kind: 短片
 status: complete
 runtime: 52 秒
+cover: ../../../assets/covers/film-day-of-repentance-and-prayer-2026.jpg
+coverAlt: '影片封面。淡黃色的黃昏天空下是薩克森小瑞士的一座平頂岩山，上方寫著「2026年11月18日・星期三」、「懺悔與祈禱日」、德文「Buß- und Bettag」，以及「省思與新開始」和德文「Innehalten und neu anfangen」。'
 sources:
   - title: "薩克森小瑞士的黃昏"
     url: "https://www.pexels.com/photo/clear-yellow-sky-over-hill-and-forest-in-winter-20254031/"
@@ -66,7 +68,6 @@ sources:
   - title: "Bayerisches Staatsministerium für Bildung und Kultus, Wissenschaft und Kunst, Bekanntmachung vom 7. Juli 2015 (KWMBl. S. 117)"
     url: "https://www.gesetze-bayern.de/Content/Document/BayVwV313239/True"
     note: "參考。懺悔與祈禱日巴伐利亞全邦學校停課。"
-draft: true
 ---
 中德雙語短片，德文片名 *Innehalten und neu anfangen*。
 
